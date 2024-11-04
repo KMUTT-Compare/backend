@@ -48,5 +48,24 @@ public class StaffService {
     }
 
     //Method -update staff
+    public StaffDTO updateStaff(Integer id, StaffDTO staffDTO){
+        Staff exitsStaff = staffRepository.findByStaffId(id).orElseThrow(
+                () -> new ResourceNotFoundException(id + " does not exit!!!"));
+        exitsStaff.setStaffName(staffDTO.getStaffName());
+        exitsStaff.setAddress(staffDTO.getAddress());
+        exitsStaff.setEmail(staffDTO.getEmail());
+        exitsStaff.setPhone(staffDTO.getPhone());
+        Staff updatedStaff = staffRepository.save(exitsStaff);
+        return modelMapper.map(updatedStaff, StaffDTO.class);
+    }
 
+    //Method -delete staff
+    public String deleteStaff(Integer id){
+        if (staffRepository.existsByStaffId(id)){
+            staffRepository.deleteByStaffId(id);
+            return "Staff with ID " + id + " has been deleted successfully!";
+        }else {
+            throw new ResourceNotFoundException("Staff with ID " + id + " dose not exit!!!");
+        }
+    }
 }

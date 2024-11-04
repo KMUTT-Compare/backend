@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface StaffRepository extends MongoRepository<Staff, ObjectId> {
     Optional<Staff> findByStaffId(Integer id); // เพิ่มเมธอดสำหรับค้นหาตาม Staff id *เพราะ mongoDB ค้นหา id จะเป็น ObjectId
+    boolean existsByStaffId(Integer id); // boolean เพื่อเช็คว่า id นี้มีหรือไม่
+    void deleteByStaffId(Integer id); // delete โดยไม่ต้องคืนค่า
 }

@@ -39,13 +39,21 @@ public class StaffController {
 
     // Create Staff
     @PostMapping("")
-//    public StaffDTO createStaff(@RequestBody StaffDTO staffDTO ){
-//        Staff staff = modelMapper.map(staffDTO, Staff.class);
-//        return staffService.createStaff(staff);
-//    }
-
     public StaffDTO createAnnouncement(@RequestBody StaffDTO staffDTO ){
         Staff staff = modelMapper.map(staffDTO,Staff.class);
         return staffService.createStaff(staff);
+    }
+
+    // Update Staff
+    @PutMapping("/{id}")
+    public StaffDTO updatedStaff(@RequestBody StaffDTO staffDTO, @PathVariable Integer id){
+        return staffService.updateStaff(id, staffDTO);
+    }
+
+    // Delete Staff
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletedStaff(@PathVariable Integer id){
+        String message = staffService.deleteStaff(id); // รับข้อความยืนยันจาก service
+        return ResponseEntity.ok(message); // ส่งข้อความกลับไปเป็น response
     }
 }
