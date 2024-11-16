@@ -43,7 +43,7 @@ public class StaffService {
     //Method -update staff
     public StaffDTO updateStaff(Integer id, StaffDTO staffDTO){
         Staff exitsStaff = staffRepository.findByStaffId(id).orElseThrow(
-                () -> new ResourceNotFoundException(id + " does not exit!!!"));
+                () -> new ResourceNotFoundException(id + " does not exited!!!"));
         exitsStaff.setStaffName(staffDTO.getStaffName());
         exitsStaff.setAddress(staffDTO.getAddress());
         exitsStaff.setEmail(staffDTO.getEmail());
@@ -58,7 +58,7 @@ public class StaffService {
             staffRepository.deleteByStaffId(id);
             return "Staff with ID " + id + " has been deleted successfully!";
         }else {
-            throw new ResourceNotFoundException("Staff with ID " + id + " dose not exit!!!");
+            throw new ResourceNotFoundException("Staff with ID " + id + " dose not exited!!!");
         }
     }
 }

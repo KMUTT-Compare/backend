@@ -9,4 +9,7 @@ import java.util.Optional;
 
 public interface DormitoryRepository extends MongoRepository<Dormitory, ObjectId> {
     Optional<Dormitory> findByDormId(Integer id);
+    boolean existsByDormId(Integer id);
+    void deleteByDormId(Integer id);
+
 }

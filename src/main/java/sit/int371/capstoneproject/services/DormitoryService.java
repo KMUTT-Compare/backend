@@ -9,10 +9,9 @@ import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Staff;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.StaffRepository;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -62,11 +61,40 @@ public class DormitoryService {
         addDorm.setBuilding_facility(dormitory.getBuilding_facility());
         addDorm.setRoom_facility(dormitory.getRoom_facility());
         addDorm.setStaffId(dormitory.getStaffId());
-
-
-        // บันทึก Dormitory และแปลงเป็น DTO
         return modelMapper.map(dormitoryRepository.save(addDorm), DormitoryDTO.class);
     }
 
+    //Method -update dormitory
+    public DormitoryDTO updateDorm(Integer id, DormitoryDTO dormitoryDTO){
+        Dormitory exitsDorm = dormitoryRepository.findByDormId(id).orElseThrow(
+                () -> new ResourceNotFoundException(id + "does not exited!!!"));
+        exitsDorm.setName(dormitoryDTO.getName());
+        exitsDorm.setStatus(dormitoryDTO.getStatus());
+        exitsDorm.setAddress(dormitoryDTO.getAddress());
+        exitsDorm.setRoomCount(dormitoryDTO.getRoomCount());
+        exitsDorm.setType(dormitoryDTO.getType());
+        exitsDorm.setSize(dormitoryDTO.getSize());
+        exitsDorm.setMin_price(dormitoryDTO.getMin_price());
+        exitsDorm.setMax_price(dormitoryDTO.getMax_price());
+        exitsDorm.setDistance(dormitoryDTO.getDistance());
+        exitsDorm.setCreated_at(dormitoryDTO.getCreated_at());
+        exitsDorm.setUpdated_at(dormitoryDTO.getUpdated_at());
+        exitsDorm.setImage(dormitoryDTO.getImage());
+        exitsDorm.setBuilding_facility(dormitoryDTO.getBuilding_facility());
+        exitsDorm.setRoom_facility(dormitoryDTO.getRoom_facility());
+        exitsDorm.setStaffId(dormitoryDTO.getStaffId());
+        Dormitory updatedDormitory = dormitoryRepository.save(exitsDorm);
+        return modelMapper.map(updatedDormitory, DormitoryDTO.class);
+    }
+
+//    //Method -delete dormitory
+//    public String deleteDorm(Integer id){
+//        if (dormitoryRepository.existsByDormId(id)){
+//            dormitoryRepository.deleteByDormId(id);
+//            return "Dormitory with ID " + id + " has been deleted successfully!";
+//        }else {
+//            throw new ResourceNotFoundException("Dormitory with ID " + id + " dose not exited!!!");
+//        }
+//    }
 
 }

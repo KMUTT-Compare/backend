@@ -45,7 +45,7 @@ public class StaffController {
 
     // Update Staff
     @PutMapping("/{id}")
-    public StaffDTO updatedStaff(@RequestBody StaffDTO staffDTO, @PathVariable Integer id){
+    public StaffDTO updatedStaff(@PathVariable Integer id, @RequestBody StaffDTO staffDTO){
         return staffService.updateStaff(id, staffDTO);
     }
 
