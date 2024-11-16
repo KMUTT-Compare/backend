@@ -87,14 +87,14 @@ public class DormitoryService {
         return modelMapper.map(updatedDormitory, DormitoryDTO.class);
     }
 
-//    //Method -delete dormitory
-//    public String deleteDorm(Integer id){
-//        if (dormitoryRepository.existsByDormId(id)){
-//            dormitoryRepository.deleteByDormId(id);
-//            return "Dormitory with ID " + id + " has been deleted successfully!";
-//        }else {
-//            throw new ResourceNotFoundException("Dormitory with ID " + id + " dose not exited!!!");
-//        }
-//    }
+    //Method -delete dormitory
+    public String deleteDorm(Integer id){
+        if (dormitoryRepository.existsByDormId(id)){
+            dormitoryRepository.deleteByDormId(id);
+            return "Dormitory with ID " + id + " has been deleted successfully!";
+        }else {
+            throw new ResourceNotFoundException("Dormitory with ID " + id + " dose not exited!!!");
+        }
+    }
 
 }

@@ -46,9 +46,9 @@ public class DormitoryController {
         return dormitoryService.updateDorm(id, dormitoryDTO);
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deletedDorm(@PathVariable Integer id){
-//        String message = dormitoryService.deleteDorm(id);
-//        return ResponseEntity.ok(message);
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletedDorm(@PathVariable Integer id){
+        String message = dormitoryService.deleteDorm(id);
+        return ResponseEntity.ok(message);
+    }
 }
