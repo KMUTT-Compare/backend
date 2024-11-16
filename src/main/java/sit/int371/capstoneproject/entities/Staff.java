@@ -12,7 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Staff {
     @Id // ทำให้ MongoDB รู้ว่านี่คือ field สำหรับ ID
     private ObjectId id;   //เป็น Object ID ที่เอาไว้ระบุตัวข้อมูล
-    private Integer staffId;
+
+    private int staffId;
     private String staffName;
     private String address;
     private String email;

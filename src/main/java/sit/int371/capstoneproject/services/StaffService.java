@@ -13,13 +13,6 @@ import java.util.List;
 
 @Service
 public class StaffService {
-//    private final StaffRepository staffRepository;
-//
-//    @Autowired
-//    public StaffService(StaffRepository staffRepository) {
-//        this.staffRepository = staffRepository;
-//    }
-
     @Autowired
     private StaffRepository staffRepository;
     @Autowired
