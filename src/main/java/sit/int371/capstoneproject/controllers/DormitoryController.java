@@ -2,10 +2,7 @@ package sit.int371.capstoneproject.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.ListMapper;
 import sit.int371.capstoneproject.dtos.DormitoryDTO;
 import sit.int371.capstoneproject.entities.Dormitory;
@@ -37,4 +34,9 @@ public class DormitoryController {
         return modelMapper.map(dormitoryService.getDormById(id), DormitoryDTO.class);
     }
 
+    @PostMapping("")
+    public DormitoryDTO createdDormitory(@RequestBody DormitoryDTO dormitoryDTO){
+        Dormitory dormitory = modelMapper.map(dormitoryDTO, Dormitory.class);
+        return dormitoryService.createDorm(dormitory);
+    }
 }

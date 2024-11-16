@@ -31,7 +31,7 @@ public class DormitoryDTO {
     private List<String> image;
     private List<String> building_facility;
     private List<String> room_facility;
-    private int staff; // ตัวอย่างการเก็บ staffId แทนการเก็บ staff object ทั้งหมด
+    private int staffId;
 
 
 }

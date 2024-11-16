@@ -34,7 +34,7 @@ public class Dormitory {
     private List<String> image;
     private List<String> building_facility;
     private List<String> room_facility;
-    private int staff;  // staffId
+    private int staffId;
 
     // Nested Address Class
     @Getter

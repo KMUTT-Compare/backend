@@ -38,7 +38,7 @@ public class StaffController {
 
     // Create Staff
     @PostMapping("")
-    public StaffDTO createAnnouncement(@RequestBody StaffDTO staffDTO ){
+    public StaffDTO createdStaff(@RequestBody StaffDTO staffDTO ){
         Staff staff = modelMapper.map(staffDTO,Staff.class);
         return staffService.createStaff(staff);
     }
