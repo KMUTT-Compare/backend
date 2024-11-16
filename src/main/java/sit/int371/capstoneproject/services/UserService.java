@@ -2,6 +2,7 @@ package sit.int371.capstoneproject.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import sit.int371.capstoneproject.dtos.UserDTO;
@@ -55,4 +56,13 @@ public class UserService {
         return modelMapper.map(updatedUser, UserDTO.class);
     }
 
+    //Method -delete user
+    public String deleteUser(Integer id){
+        if (userRepository.existsByUserId(id)){
+            userRepository.deleteByUserId(id);
+            return "User with ID " + id + " has been deleted successfully!";
+        }else {
+            throw new ResourceNotFoundException("User with ID " + id + " dose not exited!!!");
+        }
+    }
 }

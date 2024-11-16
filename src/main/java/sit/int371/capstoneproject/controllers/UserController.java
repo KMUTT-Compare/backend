@@ -3,6 +3,7 @@ package sit.int371.capstoneproject.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.ListMapper;
 import sit.int371.capstoneproject.dtos.UserDTO;
@@ -44,5 +45,11 @@ public class UserController {
     @PutMapping("/{id}")
     public UserDTO updatedUser(@PathVariable Integer id, @RequestBody UserDTO userDTO){
         return userService.updateUser(id, userDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletedUser(@PathVariable Integer id){
+        String message = userService.deleteUser(id);
+        return ResponseEntity.ok(message);
     }
 }
