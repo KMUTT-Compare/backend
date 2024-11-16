@@ -23,7 +23,7 @@ public class StaffController {
     @Autowired
     private ListMapper listMapper;
 
-    //Get Staff All Staff
+    //Get All Staff
     @GetMapping("")
     public List<StaffDTO> getAllStaffDTO() {
         List<Staff> staffList = staffService.getAllStaff();
