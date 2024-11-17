@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-@Document(collection = "staff")
-public class AutoStaffId {
+@Document(collection = "db_sequences")
+public class DatabaseSequence {
     @Id
     private String id;
     private long seq;
