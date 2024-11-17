@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.ListMapper;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
 import sit.int371.capstoneproject.entities.Favorite;
-import sit.int371.capstoneproject.repositories.FavoriteRepository;
 import sit.int371.capstoneproject.services.FavoriteService;
 
 import java.util.List;
