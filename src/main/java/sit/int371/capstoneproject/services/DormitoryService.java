@@ -1,14 +1,18 @@
 package sit.int371.capstoneproject.services;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import sit.int371.capstoneproject.dtos.DormitoryDTO;
+import sit.int371.capstoneproject.dtos.DormitoryStaffNameDTO;
 import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Staff;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.StaffRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,10 +34,20 @@ public class DormitoryService {
     }
 
     //Method -find dormitory by id
-    public Dormitory getDormById(Integer id){
-        return dormitoryRepository.findByDormId(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Dormitory id " + id + "not found !!!"));
+    public DormitoryStaffNameDTO getDormById(Integer id) {
+        Dormitory dormitory = dormitoryRepository.findByDormId(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dormitory id " + id + " not found !!!"));
+
+        DormitoryStaffNameDTO dto = new DormitoryStaffNameDTO();
+        BeanUtils.copyProperties(dormitory, dto); // คัดลอกข้อมูลทั่วไปจาก Dormitory
+
+        // ดึง staffName จาก Staff collection
+        staffRepository.findByStaffId(dormitory.getStaffId())
+                .ifPresent(staff -> dto.setStaffName(staff.getStaffName()));
+
+        return dto;
     }
+
 
     //Method -create dormitory
     public DormitoryDTO createDorm(Dormitory dormitory) {
@@ -97,4 +111,23 @@ public class DormitoryService {
         }
     }
 
+
+    //เรียกเข้า staffName มาโชว์ด้วย
+    public List<DormitoryStaffNameDTO> getAllDormitories() {
+        List<Dormitory> dormitories = dormitoryRepository.findAll();
+        List<DormitoryStaffNameDTO> dtoList = new ArrayList<>();
+
+        for (Dormitory dormitory : dormitories) {
+            DormitoryStaffNameDTO dto = new DormitoryStaffNameDTO();
+            BeanUtils.copyProperties(dormitory, dto); // คัดลอกข้อมูลทั่วไปจาก Dormitory
+
+            // ดึง staffName จาก Staff collection
+            staffRepository.findByStaffId(dormitory.getStaffId())
+                    .ifPresent(staff -> dto.setStaffName(staff.getStaffName()));
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
 }

@@ -7,14 +7,13 @@ import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.DormitoryStatusEnum;
 import sit.int371.capstoneproject.entities.DormitoryTypeEnum;
 
-
-
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-public class DormitoryDTO {
+public class DormitoryStaffNameDTO {
+
     private int dormId;
     private String name;
     private DormitoryStatusEnum status;
@@ -31,5 +30,6 @@ public class DormitoryDTO {
     private List<String> building_facility;
     private List<String> room_facility;
     private int staffId;
+    private String staffName;
 
 }

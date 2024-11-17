@@ -15,8 +15,12 @@ import java.util.List;
 public class StaffService {
     @Autowired
     private StaffRepository staffRepository;
+
+//    @Autowired
+//    private AutoStaffIdService autoStaffIdService;
     @Autowired
     private ModelMapper modelMapper;
+
 
     //Method -get All staff
     public List<Staff> getAllStaff(){
@@ -31,6 +35,7 @@ public class StaffService {
 
     //Method -create staff
     public StaffDTO createStaff(Staff staff){
+//        staff.setStaffId((int) AutoStaffIdService.generateSequence(Staff.SEQUENCE_NAME));
         Staff addStaff = new Staff();
         addStaff.setStaffId(staff.getStaffId());
         addStaff.setStaffName(staff.getStaffName());

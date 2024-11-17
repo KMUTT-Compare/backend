@@ -40,6 +40,7 @@ public class Dormitory {
     @Getter
     @Setter
     public static class Address {
+        private int dormNumber;
         private String street;
         private String subdistrict;
         private String district;

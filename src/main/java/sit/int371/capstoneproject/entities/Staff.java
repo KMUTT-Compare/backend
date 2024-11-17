@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -13,6 +14,8 @@ public class Staff {
     @Id // ทำให้ MongoDB รู้ว่านี่คือ field สำหรับ ID
     private ObjectId id;   //เป็น Object ID ที่เอาไว้ระบุตัวข้อมูล
 
+    @Transient // ไม่เก็บ field นี้ใน MongoDB
+    public static final String SEQUENCE_NAME = "staff_sequence";
     private int staffId;
     private String staffName;
     private String address;
