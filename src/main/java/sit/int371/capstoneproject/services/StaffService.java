@@ -34,6 +34,7 @@ public class StaffService {
     //Method -create staff
     public StaffDTO createStaff(Staff staff){
         Staff addStaff = new Staff();
+        addStaff.setStaffId(staff.getStaffId());
         addStaff.setStaffName(staff.getStaffName());
         addStaff.setAddress(staff.getAddress());
         addStaff.setEmail(staff.getEmail());

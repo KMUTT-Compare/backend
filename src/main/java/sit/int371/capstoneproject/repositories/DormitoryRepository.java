@@ -12,4 +12,7 @@ public interface DormitoryRepository extends MongoRepository<Dormitory, ObjectId
     boolean existsByDormId(Integer id);
     void deleteByDormId(Integer id);
 
+    //generate dormitory id
+    Optional<Dormitory> findTopByOrderByDormIdDesc();
+
 }

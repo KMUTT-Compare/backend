@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -18,6 +19,8 @@ public class Dormitory {
     @Id // ทำให้ MongoDB รู้ว่านี่คือ field สำหรับ ID
     private ObjectId id;   //เป็น Object ID ที่เอาไว้ระบุตัวข้อมูล
 
+    @Transient // ไม่เก็บ field นี้ใน MongoDB
+    public static final String SEQUENCE_NAME = "dorm_sequence";
     private int dormId;
     private String name;
     private DormitoryStatusEnum status; // ใช้ enum ก็ได้ในกรณีที่ต้องการความปลอดภัย

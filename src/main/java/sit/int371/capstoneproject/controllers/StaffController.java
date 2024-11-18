@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.ListMapper;
-import sit.int371.capstoneproject.autoId.SequenceGeneratorService;
+import sit.int371.capstoneproject.autoId.SequenceGenerateStaffService;
 import sit.int371.capstoneproject.dtos.StaffDTO;
 import sit.int371.capstoneproject.entities.Staff;
 import sit.int371.capstoneproject.services.StaffService;
@@ -25,7 +25,7 @@ public class StaffController {
     private ListMapper listMapper;
 
     @Autowired
-    private SequenceGeneratorService sequenceGeneratorService;
+    private SequenceGenerateStaffService sequenceGenerateStaffService;
 
     //Get All Staff
     @GetMapping("")
@@ -44,7 +44,7 @@ public class StaffController {
     @PostMapping("")
     public StaffDTO createdStaff(@RequestBody StaffDTO staffDTO ){
         //generate staff id
-        staffDTO.setStaffId((int) sequenceGeneratorService.generateSequence(Staff.SEQUENCE_NAME));
+        staffDTO.setStaffId((int) sequenceGenerateStaffService.generateSequence(Staff.SEQUENCE_NAME));
         Staff staff = modelMapper.map(staffDTO,Staff.class);
         return staffService.createStaff(staff);
     }
@@ -53,7 +53,7 @@ public class StaffController {
     @PutMapping("/{id}")
     public StaffDTO updatedStaff(@PathVariable Integer id, @RequestBody StaffDTO staffDTO){
         //generate staff id
-        staffDTO.setStaffId((int) sequenceGeneratorService.generateSequence(Staff.SEQUENCE_NAME));
+        staffDTO.setStaffId((int) sequenceGenerateStaffService.generateSequence(Staff.SEQUENCE_NAME));
         return staffService.updateStaff(id, staffDTO);
     }
 
