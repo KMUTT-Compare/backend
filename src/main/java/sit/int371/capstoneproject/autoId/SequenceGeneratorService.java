@@ -19,23 +19,32 @@ public class SequenceGeneratorService {
     private MongoOperations mongoOperations;
 
     public long generateSequence(String seqName) {
+        // ดึง Sequence ปัจจุบัน (ถ้าไม่มี ให้สร้างใหม่)
         DatabaseSequence counter = mongoOperations.findAndModify(
-                Query.query(Criteria.where("_id").is(seqName)),
+                Query.query(Criteria.where("staffId").is(seqName)), //ใช้ staffId เพื่อเรียกลำดับ
                 new Update().inc("seq", 1),
                 FindAndModifyOptions.options().returnNew(true).upsert(true),
                 DatabaseSequence.class);
 
-        // หาก Sequence ถูกสร้างใหม่ ให้เริ่มจาก staffId ที่มากที่สุด
-        if (counter != null && counter.getSeq() == 1) {
-            int maxStaffId = staffRepository.findTopByOrderByStaffIdDesc()
-                    .map(Staff::getStaffId)
-                    .orElse(0);
-            counter.setSeq(maxStaffId + 1);
+        // ดึงค่า staffId สูงสุดใน collection staff
+        int maxStaffId = staffRepository.findTopByOrderByStaffIdDesc()
+                .map(Staff::getStaffId)
+                .orElse(0);
 
-            // อัปเดตค่า seq ใหม่ในฐานข้อมูล
-            mongoOperations.save(counter);
+        // หาก Sequence เริ่มใหม่หรือมีค่าน้อยกว่า staffId สูงสุด ให้รีเซ็ต Sequence
+        if (counter == null || counter.getSeq() <= maxStaffId) {
+            long newSeq = maxStaffId + 1; // กำหนดค่าใหม่ให้มากกว่า staffId สูงสุด
+            mongoOperations.updateFirst(
+                    Query.query(Criteria.where("staffId").is(seqName)),
+                    Update.update("seq", newSeq),
+                    DatabaseSequence.class);
+
+            return newSeq; // ส่งคืนค่า Sequence ที่อัปเดตแล้ว
         }
 
+        // ส่งคืน Sequence ปัจจุบันที่เพิ่มขึ้น 1
         return counter != null ? counter.getSeq() : 1;
     }
+
+
 }

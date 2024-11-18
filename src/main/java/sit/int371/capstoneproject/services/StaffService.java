@@ -2,15 +2,8 @@ package sit.int371.capstoneproject.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.FindAndModifyOptions;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import sit.int371.capstoneproject.autoId.DatabaseSequence;
-import sit.int371.capstoneproject.autoId.SequenceGeneratorService;
 import sit.int371.capstoneproject.dtos.StaffDTO;
 import sit.int371.capstoneproject.entities.Staff;
 import sit.int371.capstoneproject.repositories.StaffRepository;
@@ -26,8 +19,6 @@ public class StaffService {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Autowired
-    private SequenceGeneratorService sequenceGeneratorService;
 
     //Method -get All staff
     public List<Staff> getAllStaff(){
