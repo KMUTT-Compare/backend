@@ -18,9 +18,9 @@ import java.util.List;
 public class DormitoryController {
     @Autowired
     private DormitoryService dormitoryService;
-
     @Autowired
     private SequenceGenerateDormService sequenceGenerateDormService;
+
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -50,12 +50,15 @@ public class DormitoryController {
         return dormitoryService.createDorm(dormitory);
     }
 
+    //Update Dormitory
     @PutMapping("/{id}")
     public DormitoryDTO updatedDorm(@PathVariable Integer id, @RequestBody DormitoryDTO dormitoryDTO){
-
+        //generate dormitory id
+        dormitoryDTO.setDormId((int) sequenceGenerateDormService.generateSequence(Dormitory.SEQUENCE_NAME));
         return dormitoryService.updateDorm(id, dormitoryDTO);
     }
 
+    //Delete Dormitory
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletedDorm(@PathVariable Integer id){
         String message = dormitoryService.deleteDorm(id);
