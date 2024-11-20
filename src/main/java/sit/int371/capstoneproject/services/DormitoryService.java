@@ -46,6 +46,11 @@ public class DormitoryService {
 
     //Method -create dormitory
     public DormitoryDTO createDorm(Dormitory dormitory) {
+        // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!staffRepository.existsByStaffId(dormitory.getStaffId())) {
+            throw new ResourceNotFoundException("Staff id " + dormitory.getStaffId() + " not exited!!!");
+        }
+
         Dormitory addDorm = new Dormitory();
         addDorm.setDormId(dormitory.getDormId());
         addDorm.setName(dormitory.getName());
@@ -69,7 +74,13 @@ public class DormitoryService {
     //Method -update dormitory
     public DormitoryDTO updateDorm(Integer id, DormitoryDTO dormitoryDTO){
         Dormitory exitsDorm = dormitoryRepository.findByDormId(id).orElseThrow(
-                () -> new ResourceNotFoundException(id + "does not exited!!!"));
+                () -> new ResourceNotFoundException(id + " does not exited!!! "));
+
+        // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!staffRepository.existsByStaffId(dormitoryDTO.getStaffId())) {
+            throw new ResourceNotFoundException("Staff id " + dormitoryDTO.getStaffId() + " not exited!!!");
+        }
+
         exitsDorm.setName(dormitoryDTO.getName());
         exitsDorm.setStatus(dormitoryDTO.getStatus());
         exitsDorm.setAddress(dormitoryDTO.getAddress());

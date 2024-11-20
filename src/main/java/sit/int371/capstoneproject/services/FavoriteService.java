@@ -6,7 +6,9 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
 import sit.int371.capstoneproject.entities.Favorite;
+import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.FavoriteRepository;
+import sit.int371.capstoneproject.repositories.UserRepository;
 
 import java.util.List;
 
@@ -14,7 +16,10 @@ import java.util.List;
 public class FavoriteService {
     @Autowired
     private FavoriteRepository favoriteRepository;
-
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private DormitoryRepository dormitoryRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -32,6 +37,15 @@ public class FavoriteService {
 
     //Method -create favorite
     public FavoriteDTO createFav(Favorite favorite){
+        // ตรวจสอบว่า dormId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!dormitoryRepository.existsByDormId(favorite.getDormId())) {
+            throw new ResourceNotFoundException("Dorm id " + favorite.getDormId() + " not exited!!!");
+        }
+        // ตรวจสอบว่า userId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!userRepository.existsByUserId(favorite.getUserId())) {
+            throw new ResourceNotFoundException("User id " + favorite.getUserId() + " not exited!!!");
+        }
+
         Favorite addFav = new Favorite();
         addFav.setFavId(favorite.getFavId());
         addFav.setDormId(favorite.getDormId());
@@ -43,6 +57,14 @@ public class FavoriteService {
     public FavoriteDTO updateFav(Integer id, FavoriteDTO favoriteDTO){
         Favorite exitsFav = favoriteRepository.findByFavId(id).orElseThrow(
                 () -> new ResourceNotFoundException(id + " does not exited!!! "));
+        // ตรวจสอบว่า dormId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!dormitoryRepository.existsByDormId(favoriteDTO.getDormId())) {
+            throw new ResourceNotFoundException("Dorm id " + favoriteDTO.getDormId() + " not exited!!!");
+        }
+        // ตรวจสอบว่า userId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!userRepository.existsByUserId(favoriteDTO.getUserId())) {
+            throw new ResourceNotFoundException("User id " + favoriteDTO.getUserId() + " not exited!!!");
+        }
         exitsFav.setDormId(favoriteDTO.getDormId());
         exitsFav.setUserId(favoriteDTO.getUserId());
         return modelMapper.map(favoriteRepository.save(exitsFav), FavoriteDTO.class);
