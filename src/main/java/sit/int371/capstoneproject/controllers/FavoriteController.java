@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.ListMapper;
+import sit.int371.capstoneproject.autoId.SequenceGenerateFavService;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
 import sit.int371.capstoneproject.entities.Favorite;
+import sit.int371.capstoneproject.entities.User;
 import sit.int371.capstoneproject.services.FavoriteService;
 
 import java.util.List;
@@ -16,7 +18,8 @@ import java.util.List;
 public class FavoriteController {
     @Autowired
     private FavoriteService favoriteService;
-
+    @Autowired
+    private SequenceGenerateFavService sequenceGenerateFavService;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -37,12 +40,16 @@ public class FavoriteController {
 
     @PostMapping()
     public FavoriteDTO createdFav(@RequestBody FavoriteDTO favoriteDTO){
+        //generate dormitory id
+        favoriteDTO.setFavId((int) sequenceGenerateFavService.generateSequence(Favorite.SEQUENCE_NAME));
         Favorite favorite = modelMapper.map(favoriteDTO, Favorite.class);
         return favoriteService.createFav(favorite);
     }
 
     @PutMapping("/{id}")
     public FavoriteDTO updatedFav(@PathVariable Integer id, @RequestBody FavoriteDTO favoriteDTO){
+        //generate dormitory id
+        favoriteDTO.setFavId((int) sequenceGenerateFavService.generateSequence(Favorite.SEQUENCE_NAME));
         return favoriteService.updateFav(id, favoriteDTO);
     }
 
