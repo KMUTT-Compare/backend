@@ -3,6 +3,7 @@ package sit.int371.capstoneproject.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import sit.int371.capstoneproject.dtos.DormitoryDTO;
@@ -13,8 +14,7 @@ import sit.int371.capstoneproject.repositories.StaffRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,16 +33,15 @@ public class DormitoryService {
         Dormitory dormitory = dormitoryRepository.findByDormId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dormitory id " + id + " not found !!!"));
 
-        DormitoryStaffNameDTO dto = new DormitoryStaffNameDTO();
-        BeanUtils.copyProperties(dormitory, dto); // คัดลอกข้อมูลทั่วไปจาก Dormitory
+        DormitoryStaffNameDTO staffNameDTO = new DormitoryStaffNameDTO();
+        BeanUtils.copyProperties(dormitory, staffNameDTO); // คัดลอกข้อมูลทั่วไปจาก Dormitory
 
         // ดึง staffName จาก Staff collection
         staffRepository.findByStaffId(dormitory.getStaffId())
-                .ifPresent(staff -> dto.setStaffName(staff.getStaffName()));
+                .ifPresent(staff -> staffNameDTO.setStaffName(staff.getStaffName()));
 
-        return dto;
+        return staffNameDTO;
     }
-
 
     //Method -create dormitory
     public DormitoryDTO createDorm(Dormitory dormitory) {
@@ -117,16 +116,34 @@ public class DormitoryService {
         List<DormitoryStaffNameDTO> dtoList = new ArrayList<>();
 
         for (Dormitory dormitory : dormitories) {
-            DormitoryStaffNameDTO dto = new DormitoryStaffNameDTO();
-            BeanUtils.copyProperties(dormitory, dto); // คัดลอกข้อมูลทั่วไปจาก Dormitory
+            DormitoryStaffNameDTO staffNameDTO = new DormitoryStaffNameDTO();
+            BeanUtils.copyProperties(dormitory, staffNameDTO); // คัดลอกข้อมูลทั่วไปจาก Dormitory
 
             // ดึง staffName จาก Staff collection
             staffRepository.findByStaffId(dormitory.getStaffId())
-                    .ifPresent(staff -> dto.setStaffName(staff.getStaffName()));
+                    .ifPresent(staff -> staffNameDTO.setStaffName(staff.getStaffName()));
 
-            dtoList.add(dto);
+            dtoList.add(staffNameDTO);
         }
 
         return dtoList;
+    }
+
+
+    // ทำ Sorting Dormitories ตามราคาของหอพักทั้ง ราคาสูงสุด, ราคาต่ำสุด
+    // Sort Dormitory by min_price
+    public List<DormitoryDTO> sortDormByMinPrice() {
+        List<Dormitory> dorms = dormitoryRepository.findAll(Sort.by(Sort.Direction.ASC, "min_price"));
+        return dorms.stream()
+                .map(dorm -> modelMapper.map(dorm, DormitoryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    // Sort Dormitory by max_price
+    public List<DormitoryDTO> sortDormByMaxPrice() {
+        List<Dormitory> dorms = dormitoryRepository.findAll(Sort.by(Sort.Direction.DESC, "max_price"));
+        return dorms.stream()
+                .map(dorm -> modelMapper.map(dorm, DormitoryDTO.class))
+                .collect(Collectors.toList());
     }
 }

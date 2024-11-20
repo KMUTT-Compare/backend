@@ -64,4 +64,18 @@ public class DormitoryController {
         String message = dormitoryService.deleteDorm(id);
         return ResponseEntity.ok(message);
     }
+
+    //Get all dormitories by Min Price
+    @GetMapping("/sort/min_price")
+    public ResponseEntity<List<DormitoryDTO>> sortDormByMinPrice() {
+        List<DormitoryDTO> dorms = dormitoryService.sortDormByMinPrice();
+        return ResponseEntity.ok(dorms);
+    }
+
+    //Get all dormitories by Max Price
+    @GetMapping("/sort/max_price")
+    public ResponseEntity<List<DormitoryDTO>> sortDormByMaxPrice() {
+        List<DormitoryDTO> dorms = dormitoryService.sortDormByMaxPrice();
+        return ResponseEntity.ok(dorms);
+    }
 }
