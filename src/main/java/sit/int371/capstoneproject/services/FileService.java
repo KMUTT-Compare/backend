@@ -3,6 +3,7 @@ package sit.int371.capstoneproject.services;
 
 import org.apache.coyote.BadRequestException;
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
+import sit.int371.capstoneproject.repositories.FileRepository;
 import sit.int371.capstoneproject.util.UUIDv7;
 
 import java.io.File;
@@ -28,12 +30,14 @@ import java.util.List;
 
 @Service
 public class FileService {
-    private String uploadDir = "cap-file-upload";
-    private String baseUrl = "http://localhost:8080/api/images";
+    private final String uploadDir = "cap-file-upload";
+    private final String baseUrl = "http://localhost:8080/api/images";
 
     private final Tika tika = new Tika();
+    @Autowired
+    private FileRepository fileRepository;
 
-    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList) throws BadRequestException {
+    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer staffId) throws BadRequestException {
         if (multipartFileList.size() ==0 ){
             throw new BadRequestException();
         }
@@ -48,7 +52,14 @@ public class FileService {
                 Path filePath = Path.of(uploadDir, generateFileName);
                 Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                 String uploadDate = String.valueOf(LocalDateTime.now());
-                fileUploadReturnDTOList.add(new FileUploadReturnDTO(multipartFile.getOriginalFilename(), uploadDate, baseUrl + "/" + generateFileName));
+                //จัดการ database ทั้งหมด
+                sit.int371.capstoneproject.entities.File fileEntity = new sit.int371.capstoneproject.entities.File();
+                fileEntity.setFileId(generateFileName);
+                fileEntity.setFileName(multipartFile.getOriginalFilename());
+                fileEntity.setUploadDate(uploadDate);
+                fileEntity.setStaffId(staffId);
+                fileRepository.save(fileEntity);
+                fileUploadReturnDTOList.add(new FileUploadReturnDTO(generateFileName, multipartFile.getOriginalFilename(), uploadDate, baseUrl + "/" + generateFileName));
             }
             return fileUploadReturnDTOList;
         }
@@ -71,5 +82,24 @@ public class FileService {
         }catch (IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    public List<FileUploadReturnDTO> getAllImage(){
+       List<sit.int371.capstoneproject.entities.File> files = fileRepository.findAll();
+        return getFileUploadReturnDTOS(files);
+    }
+
+    private List<FileUploadReturnDTO> getFileUploadReturnDTOS(List<sit.int371.capstoneproject.entities.File> files) {
+        ArrayList<FileUploadReturnDTO> fileUploadReturnDTOList = new ArrayList<>();
+        for(sit.int371.capstoneproject.entities.File file: files){
+            fileUploadReturnDTOList.add(new FileUploadReturnDTO(file.getFileId(), file.getFileName(), file.getUploadDate(), baseUrl + "/" + file.getFileId()));
+        }
+        return fileUploadReturnDTOList;
+    }
+
+
+    public List<FileUploadReturnDTO> getAllImagesByStaffId(Integer staffId) {
+        List<sit.int371.capstoneproject.entities.File> files = fileRepository.findByStaffId(staffId);
+        return getFileUploadReturnDTOS(files);
     }
 }

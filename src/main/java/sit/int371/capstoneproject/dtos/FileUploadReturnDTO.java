@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class FileUploadReturnDTO {
+    private String fileId;
     private String fileName;
     private String uploadDate;
     private String fileUrl;
