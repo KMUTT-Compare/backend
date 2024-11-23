@@ -9,6 +9,7 @@ import sit.int371.capstoneproject.autoId.SequenceGenerateDormService;
 import sit.int371.capstoneproject.dtos.DormitoryDTO;
 import sit.int371.capstoneproject.dtos.DormitoryStaffNameDTO;
 import sit.int371.capstoneproject.entities.Dormitory;
+import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.services.DormitoryService;
 
 import java.util.List;
@@ -23,14 +24,16 @@ public class DormitoryController {
 
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private ListMapper listMapper;
 
 
     //Get All Dormitories
     @GetMapping
     public ResponseEntity<List<DormitoryStaffNameDTO>> getAllDormitories() {
         List<DormitoryStaffNameDTO> dormitories = dormitoryService.getAllDormitories(); // ดึง staffName จาก Staff collection
+        // เช็คว่ามีข้อมูลหรือไม่ ถ้าไม่มีข้อมูลให้ส่ง 404
+        if (dormitories.isEmpty()) {
+            throw new ResourceNotFoundException("No staff found!");
+        }
         return ResponseEntity.ok(dormitories);
     }
 
