@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.services;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,12 @@ public class StaffService {
 
 
     //Method -get All staff
-    public List<Staff> getAllStaff(){
-        return staffRepository.findAll();
+    public List<Staff> getAllStaff() {
+            List<Staff> staffList = staffRepository.findAll();
+            if(staffList.isEmpty()){
+                throw new ResourceNotFoundException("No staff found!");
+            }
+            return staffList;
     }
 
     //Methode -get staff by id
@@ -45,7 +50,7 @@ public class StaffService {
     //Method -update staff
     public StaffDTO updateStaff(Integer id, StaffDTO staffDTO){
         Staff exitsStaff = staffRepository.findByStaffId(id).orElseThrow(
-                () -> new ResourceNotFoundException(id + " does not exited!!!"));
+                () -> new ResourceNotFoundException("Staff id" + id + " does not exited!!!"));
         exitsStaff.setStaffName(staffDTO.getStaffName());
         exitsStaff.setAddress(staffDTO.getAddress());
         exitsStaff.setEmail(staffDTO.getEmail());

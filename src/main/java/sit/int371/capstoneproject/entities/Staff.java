@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.entities;
 
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
@@ -16,9 +17,19 @@ public class Staff {
 
     @Transient // ไม่เก็บ field นี้ใน MongoDB
     public static final String SEQUENCE_NAME = "staff_sequence";
+    @NotNull(message = "Staff ID cannot be null")
     private int staffId;
+    @NotEmpty(message = "Staff name cannot be empty")
+    @Size(max = 50, message = "Staff name must not exceed 50 characters")
     private String staffName;
+    @NotEmpty(message = "Address cannot be empty")
     private String address;
+    @NotEmpty(message = "Email cannot be empty")
+    @Email(message = "Email should be valid")
     private String email;
+
+    @NotEmpty(message = "Phone cannot be empty")
+    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
+    @Min(value = 0, message = "Phone number cannot be negative")
     private String phone;
 }

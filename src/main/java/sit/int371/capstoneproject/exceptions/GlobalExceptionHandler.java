@@ -3,8 +3,14 @@ package sit.int371.capstoneproject.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,8 +33,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
     // 500 Internal server
-    @ExceptionHandler(InternalServerException.class)
-    public ResponseEntity<ErrorResponse> handlerInternalException(InternalServerException ex, HttpServletRequest request){
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handlerInternalException(Exception ex, HttpServletRequest request){
         ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -38,4 +44,25 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(HttpStatus.BAD_GATEWAY, ex.getMessage(), request);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_GATEWAY);
     }
+
+    // Invalid
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        // สร้าง Map เพื่อเก็บ validation errors
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now().toString(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation Error",
+                errors.toString(),
+                ex.getBindingResult().getTarget() != null ? ex.getBindingResult().getTarget().toString() : ""
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+}
 }

@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.controllers;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class StaffController {
 
     //Get All Staff
     @GetMapping("")
-    public List<StaffDTO> getAllStaffDTO() {
+    public List<StaffDTO> getAllStaffDTO(){
         List<Staff> staffList = staffService.getAllStaff();
         return listMapper.mapList(staffList, StaffDTO.class, modelMapper);
     }
@@ -42,11 +43,12 @@ public class StaffController {
 
     // Create Staff
     @PostMapping("")
-    public StaffDTO createdStaff(@RequestBody StaffDTO staffDTO ){
+    public StaffDTO createdStaff(@Valid @RequestBody StaffDTO staffDTO ){
         //generate staff id
         staffDTO.setStaffId((int) sequenceGenerateStaffService.generateSequence(Staff.SEQUENCE_NAME));
-        Staff staff = modelMapper.map(staffDTO,Staff.class);
+        Staff staff = modelMapper.map(staffDTO, Staff.class);
         return staffService.createStaff(staff);
+
     }
 
     // Update Staff
