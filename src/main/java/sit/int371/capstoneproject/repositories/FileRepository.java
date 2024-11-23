@@ -10,6 +10,5 @@ import java.util.Optional;
 
 
 public interface FileRepository extends MongoRepository<File, ObjectId> {
-    Optional<File> findByFileId(String id);
     List<File> findByStaffId(Integer id);
 }

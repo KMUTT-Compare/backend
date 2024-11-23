@@ -2,10 +2,10 @@ package sit.int371.capstoneproject.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import sit.int371.capstoneproject.dtos.StaffDTO;
 import sit.int371.capstoneproject.entities.Staff;
+import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.StaffRepository;
 import java.util.List;
 

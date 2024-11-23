@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
-import sit.int371.capstoneproject.entities.File;
 import sit.int371.capstoneproject.services.FileService;
 
 import java.util.List;
