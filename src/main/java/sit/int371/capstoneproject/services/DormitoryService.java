@@ -49,7 +49,6 @@ public class DormitoryService {
         if (!staffRepository.existsByStaffId(dormitory.getStaffId())) {
             throw new ResourceNotFoundException("Staff id " + dormitory.getStaffId() + " not exited!!!");
         }
-
         Dormitory addDorm = new Dormitory();
         addDorm.setDormId(dormitory.getDormId());
         addDorm.setName(dormitory.getName());

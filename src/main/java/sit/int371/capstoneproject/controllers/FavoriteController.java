@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.controllers;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +9,11 @@ import sit.int371.capstoneproject.ListMapper;
 import sit.int371.capstoneproject.autoId.SequenceGenerateFavService;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
 import sit.int371.capstoneproject.entities.Favorite;
-import sit.int371.capstoneproject.entities.User;
 import sit.int371.capstoneproject.services.FavoriteService;
 
+
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/favorites")
@@ -39,7 +41,7 @@ public class FavoriteController {
     }
 
     @PostMapping()
-    public FavoriteDTO createdFav(@RequestBody FavoriteDTO favoriteDTO){
+    public FavoriteDTO createdFav(@Valid @RequestBody FavoriteDTO favoriteDTO){
         //generate dormitory id
         favoriteDTO.setFavId((int) sequenceGenerateFavService.generateSequence(Favorite.SEQUENCE_NAME));
         Favorite favorite = modelMapper.map(favoriteDTO, Favorite.class);
@@ -47,7 +49,7 @@ public class FavoriteController {
     }
 
     @PutMapping("/{id}")
-    public FavoriteDTO updatedFav(@PathVariable Integer id, @RequestBody FavoriteDTO favoriteDTO){
+    public FavoriteDTO updatedFav(@PathVariable Integer id, @Valid @RequestBody FavoriteDTO favoriteDTO){
         //generate dormitory id
         favoriteDTO.setFavId((int) sequenceGenerateFavService.generateSequence(Favorite.SEQUENCE_NAME));
         return favoriteService.updateFav(id, favoriteDTO);

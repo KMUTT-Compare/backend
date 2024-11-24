@@ -1,5 +1,7 @@
 package sit.int371.capstoneproject.entities;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
@@ -16,7 +18,12 @@ public class Favorite {
 
     @Transient // ไม่เก็บ field นี้ใน MongoDB
     public static final String SEQUENCE_NAME = "favorite_sequence";
+    @NotNull(message = "Favorite ID cannot be null")
     private int favId;
+    @Valid
+    @NotNull(message = "Dorm ID is required")
     private int dormId;
+    @Valid
+    @NotNull(message = "User ID is required")
     private int userId;
 }

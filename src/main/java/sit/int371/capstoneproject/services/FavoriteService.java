@@ -2,15 +2,17 @@ package sit.int371.capstoneproject.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
 import sit.int371.capstoneproject.entities.Favorite;
+import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.FavoriteRepository;
 import sit.int371.capstoneproject.repositories.UserRepository;
 
+
 import java.util.List;
+
 
 @Service
 public class FavoriteService {
@@ -26,7 +28,11 @@ public class FavoriteService {
 
     //Method -find All fav
     public List<Favorite> getAllFavorite(){
-        return favoriteRepository.findAll();
+        List<Favorite> favorites = favoriteRepository.findAll();
+        if(favorites.isEmpty()){
+            throw new ResourceNotFoundException("Favorite not found!");
+        }
+        return favorites;
     }
 
     //Method -find favorite by id

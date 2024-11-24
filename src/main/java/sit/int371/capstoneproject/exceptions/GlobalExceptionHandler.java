@@ -7,7 +7,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +33,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
     // 404 Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlerNotFoundException(ResourceNotFoundException ex, HttpServletRequest request){
