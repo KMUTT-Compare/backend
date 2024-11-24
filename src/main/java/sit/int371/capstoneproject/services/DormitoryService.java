@@ -49,6 +49,7 @@ public class DormitoryService {
         if (!staffRepository.existsByStaffId(dormitory.getStaffId())) {
             throw new ResourceNotFoundException("Staff id " + dormitory.getStaffId() + " not exited!!!");
         }
+
         Dormitory addDorm = new Dormitory();
         addDorm.setDormId(dormitory.getDormId());
         addDorm.setName(dormitory.getName());
@@ -66,7 +67,7 @@ public class DormitoryService {
         addDorm.setBuilding_facility(dormitory.getBuilding_facility());
         addDorm.setRoom_facility(dormitory.getRoom_facility());
         addDorm.setStaffId(dormitory.getStaffId());
-        return modelMapper.map(dormitoryRepository.save(addDorm), DormitoryDTO.class);
+        return modelMapper.map(dormitoryRepository.save(dormitory), DormitoryDTO.class);
     }
 
     //Method -update dormitory
