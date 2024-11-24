@@ -6,7 +6,6 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
+import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.FileRepository;
 import sit.int371.capstoneproject.util.UUIDv7;
 
@@ -86,6 +86,9 @@ public class FileService {
 
     public List<FileUploadReturnDTO> getAllImage(){
        List<sit.int371.capstoneproject.entities.File> files = fileRepository.findAll();
+       if(files.isEmpty()){
+           throw new ResourceNotFoundException("No files found");
+       }
         return getFileUploadReturnDTOS(files);
     }
 
@@ -100,6 +103,9 @@ public class FileService {
 
     public List<FileUploadReturnDTO> getAllImagesByStaffId(Integer staffId) {
         List<sit.int371.capstoneproject.entities.File> files = fileRepository.findByStaffId(staffId);
+        if(files.isEmpty()){
+            throw new ResourceNotFoundException("No files found by Staff id: " + staffId);
+        }
         return getFileUploadReturnDTOS(files);
     }
 }

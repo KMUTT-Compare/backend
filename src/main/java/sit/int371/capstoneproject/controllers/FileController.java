@@ -29,6 +29,7 @@ public class FileController {
     public List<FileUploadReturnDTO> getAllImages(){
         return fileService.getAllImage();
     }
+
     @GetMapping("/{filename}")
     public ResponseEntity<Resource> getImages(@PathVariable String filename){
         return fileService.getImage(filename);
