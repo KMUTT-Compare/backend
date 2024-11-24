@@ -56,7 +56,8 @@ public class FavoriteService {
         addFav.setFavId(favorite.getFavId());
         addFav.setDormId(favorite.getDormId());
         addFav.setUserId(favorite.getUserId());
-        return modelMapper.map(favoriteRepository.save(favorite), FavoriteDTO.class);
+        return modelMapper.map(favoriteRepository.save(addFav), FavoriteDTO.class);
+
     }
 
     //Method -update favorite

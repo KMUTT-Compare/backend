@@ -10,10 +10,8 @@ import lombok.Setter;
 public class FavoriteDTO {
     @NotNull(message = "Favorite ID cannot be null")
     private int favId;
-    @Valid
     @NotNull(message = "Dorm ID is required")
     private int dormId;
-    @Valid
     @NotNull(message = "User ID is required")
     private int userId;
 }

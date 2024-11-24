@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.controllers;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserDTO createdUser(@RequestBody UserDTO userDTO){
+    public UserDTO createdUser(@Valid @RequestBody UserDTO userDTO){
         //generate dormitory id
         userDTO.setUserId((int) sequenceGenerateUserService.generateSequence(User.SEQUENCE_NAME));
         User user = modelMapper.map(userDTO, User.class);
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserDTO updatedUser(@PathVariable Integer id, @RequestBody UserDTO userDTO){
+    public UserDTO updatedUser(@PathVariable Integer id, @Valid @RequestBody UserDTO userDTO){
         //generate dormitory id
         userDTO.setUserId((int) sequenceGenerateUserService.generateSequence(User.SEQUENCE_NAME));
         return userService.updateUser(id, userDTO);
