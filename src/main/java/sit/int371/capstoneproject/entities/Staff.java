@@ -23,6 +23,7 @@ public class Staff {
     @Size(max = 50, message = "Staff name must not exceed 50 characters")
     private String staffName;
     @NotEmpty(message = "Address cannot be empty")
+    @Size(max = 200, message = "Staff name must not exceed 50 characters")
     private String address;
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email should be valid")

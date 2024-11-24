@@ -2,7 +2,6 @@ package sit.int371.capstoneproject.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,7 +11,7 @@ public class ErrorResponseUtil {
                 LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), // timestamp
                 status.value(), // HTTP status code
                 status.getReasonPhrase(), // status reason (e.g., "Not Found")
-                message, // Error message
+                message,
                 request.getRequestURI() // Request path
         );
     }

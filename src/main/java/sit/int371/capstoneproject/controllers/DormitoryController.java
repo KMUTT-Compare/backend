@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.controllers;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,7 @@ public class DormitoryController {
 
     //Create Dormitory
     @PostMapping("")
-    public DormitoryDTO createdDormitory(@RequestBody DormitoryDTO dormitoryDTO){
+    public DormitoryDTO createdDormitory(@Valid @RequestBody DormitoryDTO dormitoryDTO){
         //generate dormitory id
         dormitoryDTO.setDormId((int) sequenceGenerateDormService.generateSequence(Dormitory.SEQUENCE_NAME));
         Dormitory dormitory = modelMapper.map(dormitoryDTO, Dormitory.class);
@@ -55,7 +56,7 @@ public class DormitoryController {
 
     //Update Dormitory
     @PutMapping("/{id}")
-    public DormitoryDTO updatedDorm(@PathVariable Integer id, @RequestBody DormitoryDTO dormitoryDTO){
+    public DormitoryDTO updatedDorm(@PathVariable Integer id, @Valid @RequestBody DormitoryDTO dormitoryDTO){
         //generate dormitory id
         dormitoryDTO.setDormId((int) sequenceGenerateDormService.generateSequence(Dormitory.SEQUENCE_NAME));
         return dormitoryService.updateDorm(id, dormitoryDTO);
