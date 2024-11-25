@@ -14,10 +14,10 @@ import java.util.Date;
 @Setter
 public class UserDTO {
 
-    @NotNull(message = "Staff ID cannot be null")
+    @NotNull(message = "User Id cannot be null")
     private int userId;
-    @NotEmpty(message = "Staff name cannot be empty")
-    @Size(max = 50, message = "Staff name must not exceed 50 characters")
+    @NotEmpty(message = "User name cannot be empty")
+    @Size(max = 50, message = "User name must not exceed 50 characters")
     private String username;
     @NotEmpty(message = "Password cannot be empty")
     @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")

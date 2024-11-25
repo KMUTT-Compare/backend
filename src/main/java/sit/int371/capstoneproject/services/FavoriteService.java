@@ -5,16 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
 import sit.int371.capstoneproject.entities.Favorite;
-import sit.int371.capstoneproject.exceptions.BadRequestException;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.FavoriteRepository;
 import sit.int371.capstoneproject.repositories.UserRepository;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Service
 public class FavoriteService {

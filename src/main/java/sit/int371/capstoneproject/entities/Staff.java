@@ -17,7 +17,7 @@ public class Staff {
 
     @Transient // ไม่เก็บ field นี้ใน MongoDB
     public static final String SEQUENCE_NAME = "staff_sequence";
-    @NotNull(message = "Staff ID cannot be null")
+    @NotNull(message = "Staff Id cannot be null")
     private int staffId;
     @NotEmpty(message = "Staff name cannot be empty")
     @Size(max = 50, message = "Staff name must not exceed 50 characters")

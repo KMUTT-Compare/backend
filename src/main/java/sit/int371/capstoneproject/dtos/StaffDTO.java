@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StaffDTO {
-    @NotNull(message = "Staff ID cannot be null")
+    @NotNull(message = "Staff Id cannot be null")
     private int staffId;
     @NotEmpty(message = "Staff name cannot be empty")
     @Size(max = 50, message = "Staff name must not exceed 50 characters")

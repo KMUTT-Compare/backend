@@ -23,10 +23,10 @@ public class Dormitory {
 
     @Transient // ไม่เก็บ field นี้ใน MongoDB
     public static final String SEQUENCE_NAME = "dorm_sequence";
-    @NotNull(message = "Staff ID cannot be null")
+    @NotNull(message = "Dormitory Id cannot be null")
     private int dormId;
-    @NotEmpty(message = "Staff name cannot be empty")
-    @Size(max = 50, message = "Staff name must not exceed 50 characters")
+    @NotEmpty(message = "Dormitory name cannot be empty")
+    @Size(max = 50, message = "Dormitory name must not exceed 50 characters")
     private String name;
     @NotNull(message = "Dormitory status cannot be null")
     private DormitoryStatusEnum status;

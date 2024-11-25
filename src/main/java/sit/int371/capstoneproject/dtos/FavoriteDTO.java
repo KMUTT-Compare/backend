@@ -8,12 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FavoriteDTO {
-    @NotNull(message = "Favorite ID cannot be null")
+    @NotNull(message = "Favorite Id cannot be null")
     private int favId;
-    @NotNull(message = "Dorm ID is required")
-    @Min(value = 1, message = "Dorm ID must be greater than 0")
+    @NotNull(message = "Dormitory Id is required")
+    @Min(value = 1, message = "Dormitory Id must be greater than 0")
     private int dormId;
-    @NotNull(message = "User ID is required")
-    @Min(value = 1, message = "User ID must be greater than 0")
+    @NotNull(message = "User Id is required")
+    @Min(value = 1, message = "User Id must be greater than 0")
     private int userId;
 }
