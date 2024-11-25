@@ -3,6 +3,8 @@
 **Topic:** KMUTT Compare 
    คือ ระบบเปรียบเทียบหอพักสำหรับนักศึกษามหาวิทยาลัยพระจอมเกล้าธนบุรี <br/>
 
+## Project status: ```Development``` <br/>
+
 ## Details
 **IDE:** IntelliJ <br/>
    license: http://jblicense.sit.kmutt.ac.th/ <br/>
@@ -10,8 +12,6 @@
 **Java application:** Apache Mavan <br/>
 **Framework:** Spring boot 🍃 <br/>
 **Tools:** Postman  -สำหรับทดสอบ APIs ต่างๆ 👩🏻‍🚀
-
-## Project status: ```Development``` <br/>
 
 ## Testing 🧪
 -UAT testing <br/>
