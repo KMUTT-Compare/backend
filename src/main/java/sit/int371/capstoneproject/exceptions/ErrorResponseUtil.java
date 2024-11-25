@@ -8,11 +8,11 @@ import java.time.format.DateTimeFormatter;
 public class ErrorResponseUtil {
     public static sit.int371.capstoneproject.exceptions.ErrorResponse createErrorResponse(HttpStatus status, String message, HttpServletRequest request) {
         return new ErrorResponse(
-                LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), // timestamp
-                status.value(), // HTTP status code
-                status.getReasonPhrase(), // status reason (e.g., "Not Found")
+                LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                status.value(),
+                status.getReasonPhrase(),
                 message,
-                request.getRequestURI() // Request path
+                request.getRequestURI()
         );
     }
 }
