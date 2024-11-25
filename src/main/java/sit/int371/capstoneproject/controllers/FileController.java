@@ -1,14 +1,16 @@
 package sit.int371.capstoneproject.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
-import org.apache.coyote.BadRequestException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
+import sit.int371.capstoneproject.exceptions.BadRequestException;
 import sit.int371.capstoneproject.services.FileService;
 
 import java.util.List;
@@ -39,7 +41,7 @@ public class FileController {
     @PostMapping("/upload")
     public List<FileUploadReturnDTO> uploadImages(
             HttpServletRequest request,
-            @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException {
+            @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException, org.apache.coyote.BadRequestException {
         Integer staffId = Integer.valueOf(request.getHeader("x-api-key"));
         return fileService.uploadImages(files, staffId);
     }

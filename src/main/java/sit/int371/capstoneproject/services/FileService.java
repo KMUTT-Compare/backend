@@ -1,7 +1,6 @@
 package sit.int371.capstoneproject.services;
 
 
-import org.apache.coyote.BadRequestException;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -14,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
+import sit.int371.capstoneproject.exceptions.BadRequestException;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.FileRepository;
+import sit.int371.capstoneproject.repositories.StaffRepository;
 import sit.int371.capstoneproject.util.UUIDv7;
 
 import java.io.File;
@@ -36,11 +37,10 @@ public class FileService {
     private final Tika tika = new Tika();
     @Autowired
     private FileRepository fileRepository;
+    @Autowired
+    private StaffRepository staffRepository;
 
     public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer staffId) throws BadRequestException {
-        if (multipartFileList.size() ==0 ){
-            throw new BadRequestException();
-        }
         ArrayList<FileUploadReturnDTO> fileUploadReturnDTOList = new ArrayList<>();
         try {
             File directory = new File(uploadDir);
@@ -48,11 +48,19 @@ public class FileService {
                 directory.mkdirs();
             }
             for (MultipartFile multipartFile: multipartFileList){
+                // ตรวจสอบว่าไฟล์ individual ไม่เป็น null และไม่ว่าง
+                if (multipartFile == null || multipartFile.isEmpty()) {
+                    throw new BadRequestException("One or more files are null or empty");
+                }
                 String generateFileName = String.valueOf(UUIDv7.randomUUID());
                 Path filePath = Path.of(uploadDir, generateFileName);
                 Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                 String uploadDate = String.valueOf(LocalDateTime.now());
                 //จัดการ database ทั้งหมด
+                // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
+                if (!staffRepository.existsByStaffId(staffId)) {
+                    throw new ResourceNotFoundException("Staff id " + staffId + " not exited!!!");
+                }
                 sit.int371.capstoneproject.entities.File fileEntity = new sit.int371.capstoneproject.entities.File();
                 fileEntity.setFileId(generateFileName);
                 fileEntity.setFileName(multipartFile.getOriginalFilename());

@@ -79,7 +79,6 @@ public class DormitoryService {
         if (!staffRepository.existsByStaffId(dormitoryDTO.getStaffId())) {
             throw new ResourceNotFoundException("Staff id " + dormitoryDTO.getStaffId() + " not exited!!!");
         }
-
         exitsDorm.setName(dormitoryDTO.getName());
         exitsDorm.setStatus(dormitoryDTO.getStatus());
         exitsDorm.setAddress(dormitoryDTO.getAddress());
