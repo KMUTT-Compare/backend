@@ -10,8 +10,11 @@
 **Java application:** Apache Mavan
 **Framework:** Spring boot 🍃
 
-
 **Tools:** Postman  -สำหรับทดสอบ APIs ต่างๆ 👩🏻‍🚀
+## Project status: ```Development``` <br/>
+## Testing
+-UAT testing
+-Postman testing
 
 ## HTTP status codes
 >Whenever the overall application status is OK, the HTTP status code in the status page response MUST be set to 200 (OK).
