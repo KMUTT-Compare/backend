@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.ListMapper;
 import sit.int371.capstoneproject.autoId.SequenceGenerateUserService;
 import sit.int371.capstoneproject.dtos.UserDTO;
-import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.User;
 import sit.int371.capstoneproject.services.UserService;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:5173/","http://127.0.0.1:5173/","https://cp24kk2.sit.kmutt.ac.th/"})
 @RequestMapping("/api/users")
 public class UserController {
 
