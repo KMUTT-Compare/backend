@@ -3,7 +3,7 @@
 **Topic:** KMUTT Compare 
    คือ ระบบเปรียบเทียบหอพักสำหรับนักศึกษามหาวิทยาลัยพระจอมเกล้าธนบุรี <br/>
 
-## Project status: ```Development``` <br/>
+## Project status: `Development` <br/>
 
 ## Details
 **IDE:** IntelliJ <br/>
