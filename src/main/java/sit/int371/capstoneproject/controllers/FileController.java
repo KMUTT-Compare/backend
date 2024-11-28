@@ -17,7 +17,7 @@ import sit.int371.capstoneproject.services.FileService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173","http://127.0.0.1:5173","https://cp24kk2.sit.kmutt.ac.th","https://cp24kk2.sit.kmutt.ac.th:3001"})
+@CrossOrigin(origins = {"http://localhost:5173","http://127.0.0.1:5173","http://cp24kk2.sit.kmutt.ac.th","http://cp24kk2.sit.kmutt.ac.th:3001","https://kmutt-compare.sit.kmutt.ac.th:5000"})
 @RequestMapping("/api/images")
 public class FileController {
     @Autowired
@@ -42,7 +42,7 @@ public class FileController {
     @PostMapping("/upload")
     public List<FileUploadReturnDTO> uploadImages(
             HttpServletRequest request,
-            @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException, org.apache.coyote.BadRequestException {
+            @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException {
         Integer staffId = Integer.valueOf(request.getHeader("x-api-key"));
         return fileService.uploadImages(files, staffId);
     }

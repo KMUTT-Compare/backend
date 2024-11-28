@@ -15,7 +15,7 @@ import sit.int371.capstoneproject.services.DormitoryService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173/","http://127.0.0.1:5173/","https://cp24kk2.sit.kmutt.ac.th/"})
+@CrossOrigin(origins = {"http://localhost:5173","http://127.0.0.1:5173","http://cp24kk2.sit.kmutt.ac.th","http://cp24kk2.sit.kmutt.ac.th:3001","https://kmutt-compare.sit.kmutt.ac.th:5000"})
 @RequestMapping("/api/dormitories")
 public class DormitoryController {
     @Autowired
