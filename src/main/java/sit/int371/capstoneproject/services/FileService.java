@@ -11,13 +11,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
+
 import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
 import sit.int371.capstoneproject.exceptions.BadRequestException;
+import sit.int371.capstoneproject.exceptions.InternalServerException;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.FileRepository;
 import sit.int371.capstoneproject.repositories.StaffRepository;
 import sit.int371.capstoneproject.util.UUIDv7;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +74,7 @@ public class FileService {
             return fileUploadReturnDTOList;
         }
         catch (IOException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -88,7 +90,7 @@ public class FileService {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"").contentType(MediaType.parseMediaType(contentType)).body(resource);
 
         }catch (IOException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -116,4 +118,24 @@ public class FileService {
         }
         return getFileUploadReturnDTOS(files);
     }
+
+public String deleteImage(String id) {
+    if (fileRepository.existsByFileId(id)) {
+        try {
+            Path filePath = Path.of(uploadDir, id); // Path ไปโฟลเดอร์ cap-file-upload
+            if (Files.exists(filePath)) { // ตรวจสอบว่าไฟล์มีอยู่
+                Files.delete(filePath);
+            } else {
+                throw new ResourceNotFoundException("File Id: " + id + " does not exist in the folder!");
+            }
+            fileRepository.deleteByFileId(id); // ลบข้อมูลจาก database
+            return "File ID: " + id + " has been deleted successfully!";
+        } catch (IOException e) {
+            throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete file: " + e.getMessage());
+        }
+    } else {
+        throw new ResourceNotFoundException("File ID " + id + " does not exist!");
+    }
+}
+
 }

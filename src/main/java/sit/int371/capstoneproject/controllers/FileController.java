@@ -13,10 +13,11 @@ import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
 import sit.int371.capstoneproject.exceptions.BadRequestException;
 import sit.int371.capstoneproject.services.FileService;
 
+
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173/","http://127.0.0.1:5173/","https://cp24kk2.sit.kmutt.ac.th/"})
+@CrossOrigin(origins = {"http://localhost:5173","http://127.0.0.1:5173","https://cp24kk2.sit.kmutt.ac.th","https://cp24kk2.sit.kmutt.ac.th:3001"})
 @RequestMapping("/api/images")
 public class FileController {
     @Autowired
@@ -44,6 +45,12 @@ public class FileController {
             @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException, org.apache.coyote.BadRequestException {
         Integer staffId = Integer.valueOf(request.getHeader("x-api-key"));
         return fileService.uploadImages(files, staffId);
+    }
+
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<String> deletedImage(@PathVariable String fileId){
+        String message = fileService.deleteImage(fileId);
+        return ResponseEntity.ok(message);
     }
 
 }
