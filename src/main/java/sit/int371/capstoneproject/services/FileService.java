@@ -34,8 +34,9 @@ import java.util.List;
 @Service
 public class FileService {
     private final String uploadDir = "cap-file-upload";
-    private final String baseUrl = "http://localhost:8080/api/images";
-
+    //private final String baseUrl = "http://localhost:8080/api/images";
+    private final String baseUrl = "https://kmutt-compare.sit.kmutt.ac.th/api/images";
+    
     private final Tika tika = new Tika();
     @Autowired
     private FileRepository fileRepository;
