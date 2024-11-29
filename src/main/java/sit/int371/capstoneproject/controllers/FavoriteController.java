@@ -50,8 +50,6 @@ public class FavoriteController {
 
     @PutMapping("/{id}")
     public FavoriteDTO updatedFav(@PathVariable Integer id, @Valid @RequestBody FavoriteDTO favoriteDTO){
-        //generate dormitory id
-        favoriteDTO.setFavId((int) sequenceGenerateFavService.generateSequence(Favorite.SEQUENCE_NAME));
         return favoriteService.updateFav(id, favoriteDTO);
     }
 

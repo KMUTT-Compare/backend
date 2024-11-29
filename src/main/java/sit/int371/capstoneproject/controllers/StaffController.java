@@ -54,8 +54,6 @@ public class StaffController {
     // Update Staff
     @PutMapping("/{id}")
     public StaffDTO updatedStaff(@PathVariable Integer id, @Valid @RequestBody StaffDTO staffDTO){
-        //generate staff id
-        staffDTO.setStaffId((int) sequenceGenerateStaffService.generateSequence(Staff.SEQUENCE_NAME));
         return staffService.updateStaff(id, staffDTO);
     }
 

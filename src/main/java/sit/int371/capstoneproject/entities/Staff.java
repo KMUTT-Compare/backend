@@ -24,7 +24,7 @@ public class Staff {
     @Size(max = 50, message = "Staff name must not exceed 50 characters")
     private String staffName;
     @Valid //เช็คว่า fields ใน Address ครบหรือยัง
-    private Address address;
+    private Dormitory.Address address;
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email should be valid")
     private String email;
@@ -39,6 +39,8 @@ public class Staff {
     @Getter
     @Setter
     public static class Address {
+        @NotEmpty(message = "Dormitory number cannot be empty")
+        private String dormNumber;
         @NotEmpty(message = "Street cannot be empty")
         private String street;
         @NotEmpty(message = "Subdistrict cannot be empty")

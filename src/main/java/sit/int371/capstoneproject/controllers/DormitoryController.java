@@ -56,8 +56,6 @@ public class DormitoryController {
     //Update Dormitory
     @PutMapping("/{id}")
     public DormitoryDTO updatedDorm(@PathVariable Integer id, @Valid @RequestBody DormitoryDTO dormitoryDTO){
-        //generate dormitory id
-        dormitoryDTO.setDormId((int) sequenceGenerateDormService.generateSequence(Dormitory.SEQUENCE_NAME));
         return dormitoryService.updateDorm(id, dormitoryDTO);
     }
 

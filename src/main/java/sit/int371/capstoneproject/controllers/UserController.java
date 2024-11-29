@@ -48,8 +48,6 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserDTO updatedUser(@PathVariable Integer id, @Valid @RequestBody UserDTO userDTO){
-        //generate dormitory id
-        userDTO.setUserId((int) sequenceGenerateUserService.generateSequence(User.SEQUENCE_NAME));
         return userService.updateUser(id, userDTO);
     }
 
