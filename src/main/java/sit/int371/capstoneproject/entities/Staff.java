@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.entities;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,8 @@ public class Staff {
     @NotEmpty(message = "Staff name cannot be empty")
     @Size(max = 50, message = "Staff name must not exceed 50 characters")
     private String staffName;
-    @NotEmpty(message = "Address cannot be empty")
-    @Size(max = 200, message = "Staff name must not exceed 50 characters")
-    private String address;
+    @Valid //เช็คว่า fields ใน Address ครบหรือยัง
+    private Address address;
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email should be valid")
     private String email;
@@ -33,4 +33,23 @@ public class Staff {
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
     @Min(value = 0, message = "Phone number cannot be negative")
     private String phone;
+
+
+    // Nested Address Class
+    @Getter
+    @Setter
+    public static class Address {
+        @NotEmpty(message = "Street cannot be empty")
+        private String street;
+        @NotEmpty(message = "Subdistrict cannot be empty")
+        private String subdistrict;
+        @NotEmpty(message = "District cannot be empty")
+        private String district;
+        @NotEmpty(message = "Province cannot be empty")
+        private String province;
+        @NotEmpty(message = "Postal code cannot be empty")
+        @Pattern(regexp = "\\d{5}", message = "Postal code must be a 5-digit number")
+        private String postalCode;
+
+    }
 }
