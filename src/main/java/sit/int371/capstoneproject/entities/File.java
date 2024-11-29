@@ -17,7 +17,7 @@ public class File {
     @NotNull(message = "Updated date cannot be null")
     private String uploadDate;
     private String fileUrl;
-    @NotNull(message = "Staff Id cannot be null")
-    private int staffId;
+    @NotNull(message = "Dorm Id cannot be null")
+    private int dormId;
 
 }

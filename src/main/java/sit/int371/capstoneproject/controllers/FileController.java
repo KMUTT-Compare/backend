@@ -17,34 +17,27 @@ import sit.int371.capstoneproject.services.FileService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173","http://127.0.0.1:5173","http://cp24kk2.sit.kmutt.ac.th","http://cp24kk2.sit.kmutt.ac.th:3001","https://kmutt-compare.sit.kmutt.ac.th:5000"})
 @RequestMapping("/api/images")
 public class FileController {
     @Autowired
     private FileService fileService;
 
-    //รอการกลับมาแก้ไขของ Jwt Token
-    @GetMapping("/staff")
-    public List<FileUploadReturnDTO> getAllImagesByStaffId(HttpServletRequest request){
-        Integer staffId = Integer.valueOf(request.getHeader("x-api-key"));
-        return fileService.getAllImagesByStaffId(staffId);
-    }
-    @GetMapping("/all")
-    public List<FileUploadReturnDTO> getAllImages(){
-        return fileService.getAllImage();
+    @GetMapping("/{fileId}")
+    public ResponseEntity<Resource> getImages(@PathVariable String fileId){
+        return fileService.getImage(fileId);
     }
 
-    @GetMapping("/{filename}")
-    public ResponseEntity<Resource> getImages(@PathVariable String filename){
-        return fileService.getImage(filename);
+    @GetMapping("/dorm/{dormId}")
+    public List<FileUploadReturnDTO> getAllImagesByDormId(@PathVariable Integer dormId) {
+        return fileService.getAllImagesByDormId(dormId);
     }
 
     @PostMapping("/upload")
     public List<FileUploadReturnDTO> uploadImages(
             HttpServletRequest request,
             @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException {
-        Integer staffId = Integer.valueOf(request.getHeader("x-api-key"));
-        return fileService.uploadImages(files, staffId);
+        Integer dormId = Integer.valueOf(request.getHeader("x-api-key"));
+        return fileService.uploadImages(files, dormId);
     }
 
     @DeleteMapping("/{fileId}")
