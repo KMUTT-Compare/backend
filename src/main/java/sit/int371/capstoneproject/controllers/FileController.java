@@ -17,6 +17,7 @@ import sit.int371.capstoneproject.services.FileService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:5173","http://127.0.0.1:5173","http://cp24kk2.sit.kmutt.ac.th","https://kmutt-compare.sit.kmutt.ac.th"})
 @RequestMapping("/api/images")
 public class FileController {
     @Autowired
@@ -32,13 +33,15 @@ public class FileController {
         return fileService.getAllImagesByDormId(dormId);
     }
 
-    @PostMapping("/upload")
-    public List<FileUploadReturnDTO> uploadImages(
+
+    @PostMapping("/upload/dorm/{dormId}")
+    public List<FileUploadReturnDTO> uploadImages(@PathVariable Integer dormId,
             HttpServletRequest request,
             @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException {
-        Integer dormId = Integer.valueOf(request.getHeader("x-api-key"));
-        return fileService.uploadImages(files, dormId);
+        Integer staffId = Integer.valueOf(request.getHeader("x-api-key"));
+        return fileService.uploadImages(files, staffId, dormId);
     }
+
 
     @DeleteMapping("/{fileId}")
     public ResponseEntity<String> deletedImage(@PathVariable String fileId){

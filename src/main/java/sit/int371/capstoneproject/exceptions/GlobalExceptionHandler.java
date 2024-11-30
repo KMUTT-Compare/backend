@@ -3,9 +3,12 @@ package sit.int371.capstoneproject.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,29 +37,66 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    // 404 Not Found
+    // 400 Bad Request (Path can't accept wrong parameter)
+    // จัดการกรณีพารามิเตอร์แปลงค่าไม่ได้
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException ex,
+            HttpServletRequest request) {
+
+        String errorMessage = String.format("Parameter '%s' has an invalid value: '%s'. Expected type: %s.",
+                ex.getName(),
+                ex.getValue(),
+                ex.getRequiredType().getSimpleName());
+
+        ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                errorMessage,
+                request
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    // 404 Not Found Data
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlerNotFoundException(ResourceNotFoundException ex, HttpServletRequest request){
         ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
-    // 409 Conflict
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorResponse> handlerConflictException(ConflictException ex, HttpServletRequest request){
-        ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), request);
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+
+    // 404 Not Found Path
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
+        ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(
+                HttpStatus.NOT_FOUND,
+                "The requested URL was not found on this server.",
+                request
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    // 404 Not Found Wrong Method
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(
+                HttpStatus.METHOD_NOT_ALLOWED,
+                "The HTTP method used is not supported for this path.",
+                request
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
     // 500 Internal server
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handlerInternalException(Exception ex, HttpServletRequest request){
         ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    // 502 Bad Gateway
-    @ExceptionHandler(BadGateWayException.class)
-    public ResponseEntity<ErrorResponse> handlerBadGateWayException(BadGateWayException ex, HttpServletRequest request){
-        ErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(HttpStatus.BAD_GATEWAY, ex.getMessage(), request);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_GATEWAY);
-    }
+
 
 }

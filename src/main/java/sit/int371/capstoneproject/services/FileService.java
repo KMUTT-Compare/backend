@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import sit.int371.capstoneproject.dtos.FileUploadReturnDTO;
+import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.exceptions.BadRequestException;
 import sit.int371.capstoneproject.exceptions.InternalServerException;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.FileRepository;
+import sit.int371.capstoneproject.repositories.StaffRepository;
 import sit.int371.capstoneproject.util.UUIDv7;
 
 
@@ -34,7 +36,7 @@ import java.util.List;
 @Service
 public class FileService {
     private final String uploadDir = "cap-file-upload";
-  //  private final String baseUrl = "http://localhost:8080/api/images";
+//    private final String baseUrl = "http://localhost:8080/api/images";
     private final String baseUrl = "https://kmutt-compare.sit.kmutt.ac.th/api/images";
     
     private final Tika tika = new Tika();
@@ -42,6 +44,9 @@ public class FileService {
     private FileRepository fileRepository;
     @Autowired
     private DormitoryRepository dormitoryRepository;
+
+    @Autowired
+    private StaffRepository staffRepository;
 
     public ResponseEntity<Resource> getImage(String fileId){
         try {
@@ -75,14 +80,15 @@ public class FileService {
         return getFileUploadReturnDTOS(files);
     }
 
-    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer dormId) throws BadRequestException {
+    //Method upload images
+    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer staffId, Integer dormId) throws BadRequestException {
         ArrayList<FileUploadReturnDTO> fileUploadReturnDTOList = new ArrayList<>();
         try {
             File directory = new File(uploadDir);
-            if(!directory.exists()){
+            if (!directory.exists()) {
                 directory.mkdirs();
             }
-            for (MultipartFile multipartFile: multipartFileList){
+            for (MultipartFile multipartFile : multipartFileList) {
                 // ตรวจสอบว่าไฟล์ individual ไม่เป็น null และไม่ว่าง
                 if (multipartFile == null || multipartFile.isEmpty()) {
                     throw new BadRequestException("One or more files are null or empty");
@@ -91,26 +97,50 @@ public class FileService {
                 Path filePath = Path.of(uploadDir, generateFileName);
                 Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                 String uploadDate = String.valueOf(LocalDateTime.now());
-                //จัดการ database ทั้งหมด
-                // ตรวจสอบว่า dorm Id มีอยู่ในฐานข้อมูลหรือไม่
-                if (!dormitoryRepository.existsByDormId(dormId)) {
-                    throw new ResourceNotFoundException("Dorm id " + dormId + " not exited!!!");
+
+                // ตรวจสอบว่า Staff Id มีอยู่ในฐานข้อมูลหรือไม่
+                if (!staffRepository.existsByStaffId(staffId)) {
+                    throw new ResourceNotFoundException("Staff id " + staffId + " not found!");
                 }
+
+                // ตรวจสอบว่า Dormitory Id มีอยู่ในฐานข้อมูลหรือไม่
+                Dormitory dormitory = dormitoryRepository.findByDormId(dormId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Dorm id " + dormId + " not found!"));
+
+                // สร้าง URL สำหรับรูปภาพใหม่
+                String fileUrl = baseUrl + "/" + generateFileName;
+
+                // เพิ่ม URL ของรูปภาพในฟิลด์ image
+                List<String> currentImages = dormitory.getImage();
+                if (currentImages == null) {
+                    currentImages = new ArrayList<>();
+                }
+                currentImages.add(fileUrl);
+                dormitory.setImage(currentImages);
+
+                // บันทึกการเปลี่ยนแปลงกลับไปที่ฐานข้อมูล
+                dormitoryRepository.save(dormitory);
+
+                // บันทึกข้อมูลไฟล์ใน collection file
                 sit.int371.capstoneproject.entities.File fileEntity = new sit.int371.capstoneproject.entities.File();
                 fileEntity.setFileId(generateFileName);
                 fileEntity.setFileName(multipartFile.getOriginalFilename());
                 fileEntity.setUploadDate(uploadDate);
+                fileEntity.setStaffId(staffId);
                 fileEntity.setDormId(dormId);
                 fileRepository.save(fileEntity);
-                fileUploadReturnDTOList.add(new FileUploadReturnDTO(generateFileName, multipartFile.getOriginalFilename(), uploadDate, baseUrl + "/" + generateFileName));
+
+                // เพิ่มข้อมูลไฟล์ไปยังรายการผลลัพธ์
+                fileUploadReturnDTOList.add(new FileUploadReturnDTO(generateFileName, multipartFile.getOriginalFilename(), uploadDate, fileUrl));
             }
             return fileUploadReturnDTOList;
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
-public String deleteImage(String id) {
+
+
+    public String deleteImage(String id) {
     if (fileRepository.existsByFileId(id)) {
         try {
             Path filePath = Path.of(uploadDir, id); // Path ไปโฟลเดอร์ cap-file-upload
