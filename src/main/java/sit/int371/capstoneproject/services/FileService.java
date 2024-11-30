@@ -42,8 +42,7 @@ public class FileService {
     private final Tika tika = new Tika();
     @Autowired
     private FileRepository fileRepository;
-    @Autowired
-    private DormitoryRepository dormitoryRepository;
+
 
     @Autowired
     private StaffRepository staffRepository;
@@ -81,14 +80,14 @@ public class FileService {
     }
 
     //Method upload images
-    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer staffId, Integer dormId) throws BadRequestException {
+    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer staffId) throws BadRequestException {
         ArrayList<FileUploadReturnDTO> fileUploadReturnDTOList = new ArrayList<>();
         try {
             File directory = new File(uploadDir);
-            if (!directory.exists()) {
+            if(!directory.exists()){
                 directory.mkdirs();
             }
-            for (MultipartFile multipartFile : multipartFileList) {
+            for (MultipartFile multipartFile: multipartFileList){
                 // ตรวจสอบว่าไฟล์ individual ไม่เป็น null และไม่ว่าง
                 if (multipartFile == null || multipartFile.isEmpty()) {
                     throw new BadRequestException("One or more files are null or empty");
@@ -97,44 +96,22 @@ public class FileService {
                 Path filePath = Path.of(uploadDir, generateFileName);
                 Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                 String uploadDate = String.valueOf(LocalDateTime.now());
-
-                // ตรวจสอบว่า Staff Id มีอยู่ในฐานข้อมูลหรือไม่
+                //จัดการ database ทั้งหมด
+                // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
                 if (!staffRepository.existsByStaffId(staffId)) {
-                    throw new ResourceNotFoundException("Staff id " + staffId + " not found!");
+                    throw new ResourceNotFoundException("Staff id " + staffId + " not exited!!!");
                 }
-
-                // ตรวจสอบว่า Dormitory Id มีอยู่ในฐานข้อมูลหรือไม่
-                Dormitory dormitory = dormitoryRepository.findByDormId(dormId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Dorm id " + dormId + " not found!"));
-
-                // สร้าง URL สำหรับรูปภาพใหม่
-                String fileUrl = baseUrl + "/" + generateFileName;
-
-                // เพิ่ม URL ของรูปภาพในฟิลด์ image
-                List<String> currentImages = dormitory.getImage();
-                if (currentImages == null) {
-                    currentImages = new ArrayList<>();
-                }
-                currentImages.add(fileUrl);
-                dormitory.setImage(currentImages);
-
-                // บันทึกการเปลี่ยนแปลงกลับไปที่ฐานข้อมูล
-                dormitoryRepository.save(dormitory);
-
-                // บันทึกข้อมูลไฟล์ใน collection file
                 sit.int371.capstoneproject.entities.File fileEntity = new sit.int371.capstoneproject.entities.File();
                 fileEntity.setFileId(generateFileName);
                 fileEntity.setFileName(multipartFile.getOriginalFilename());
                 fileEntity.setUploadDate(uploadDate);
                 fileEntity.setStaffId(staffId);
-                fileEntity.setDormId(dormId);
                 fileRepository.save(fileEntity);
-
-                // เพิ่มข้อมูลไฟล์ไปยังรายการผลลัพธ์
-                fileUploadReturnDTOList.add(new FileUploadReturnDTO(generateFileName, multipartFile.getOriginalFilename(), uploadDate, fileUrl));
+                fileUploadReturnDTOList.add(new FileUploadReturnDTO(generateFileName, multipartFile.getOriginalFilename(), uploadDate, baseUrl + "/" + generateFileName));
             }
             return fileUploadReturnDTOList;
-        } catch (IOException e) {
+        }
+        catch (IOException e){
             throw new InternalServerException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
