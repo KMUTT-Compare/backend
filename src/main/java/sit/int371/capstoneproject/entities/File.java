@@ -19,5 +19,5 @@ public class File {
     private String fileUrl;
     @NotNull(message = "Staff Id cannot be null")
     private int staffId;
-    private int dormId;
+
 }
