@@ -37,9 +37,10 @@ public class FileController {
     @PostMapping("/upload")
     public List<FileUploadReturnDTO> uploadImages(
             HttpServletRequest request,
-            @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files) throws BadRequestException {
+            @Valid @RequestPart(value = "files", required = true) @Size(max = 5, message = "You can upload a maximum of 5 files.") List<MultipartFile> files,
+            @RequestParam Integer dormId) throws BadRequestException {
         Integer staffId = Integer.valueOf(request.getHeader("x-api-key"));
-        return fileService.uploadImages(files, staffId);
+        return fileService.uploadImages(files, staffId, dormId);
     }
 
 

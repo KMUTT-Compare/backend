@@ -42,7 +42,8 @@ public class FileService {
     private final Tika tika = new Tika();
     @Autowired
     private FileRepository fileRepository;
-
+    @Autowired
+    private DormitoryRepository dormitoryRepository;
 
     @Autowired
     private StaffRepository staffRepository;
@@ -80,7 +81,7 @@ public class FileService {
     }
 
     //Method upload images
-    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer staffId) throws BadRequestException {
+    public List<FileUploadReturnDTO> uploadImages(List<MultipartFile> multipartFileList, Integer staffId, Integer dormId) throws BadRequestException {
         ArrayList<FileUploadReturnDTO> fileUploadReturnDTOList = new ArrayList<>();
         try {
             File directory = new File(uploadDir);
@@ -101,11 +102,16 @@ public class FileService {
                 if (!staffRepository.existsByStaffId(staffId)) {
                     throw new ResourceNotFoundException("Staff id " + staffId + " not exited!!!");
                 }
+                // ตรวจสอบว่า dormId ถูกส่งเข้ามาหรือไม่
+                if (dormId == null) {
+                    throw new BadRequestException("Dormitory id is required");
+                }
                 sit.int371.capstoneproject.entities.File fileEntity = new sit.int371.capstoneproject.entities.File();
                 fileEntity.setFileId(generateFileName);
                 fileEntity.setFileName(multipartFile.getOriginalFilename());
                 fileEntity.setUploadDate(uploadDate);
                 fileEntity.setStaffId(staffId);
+                fileEntity.setDormId(dormId);  //dormId
                 fileRepository.save(fileEntity);
                 fileUploadReturnDTOList.add(new FileUploadReturnDTO(generateFileName, multipartFile.getOriginalFilename(), uploadDate, baseUrl + "/" + generateFileName));
             }
