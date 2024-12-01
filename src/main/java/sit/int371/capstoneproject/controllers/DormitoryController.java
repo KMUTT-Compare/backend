@@ -33,7 +33,7 @@ public class DormitoryController {
         List<DormitoryStaffNameDTO> dormitories = dormitoryService.getAllDormitories(); // ดึง staffName จาก Staff collection
         // เช็คว่ามีข้อมูลหรือไม่ ถ้าไม่มีข้อมูลให้ส่ง 404
         if (dormitories.isEmpty()) {
-            throw new ResourceNotFoundException("No staff found!");
+            throw new ResourceNotFoundException("No dormitory found!");
         }
         return ResponseEntity.ok(dormitories);
     }
@@ -65,19 +65,5 @@ public class DormitoryController {
     public ResponseEntity<String> deletedDorm(@PathVariable Integer id){
         String message = dormitoryService.deleteDorm(id);
         return ResponseEntity.ok(message);
-    }
-
-    //Get all dormitories by Min Price
-    @GetMapping("/sort/min_price")
-    public ResponseEntity<List<DormitoryDTO>> sortDormByMinPrice() {
-        List<DormitoryDTO> dorms = dormitoryService.sortDormByMinPrice();
-        return ResponseEntity.ok(dorms);
-    }
-
-    //Get all dormitories by Max Price
-    @GetMapping("/sort/max_price")
-    public ResponseEntity<List<DormitoryDTO>> sortDormByMaxPrice() {
-        List<DormitoryDTO> dorms = dormitoryService.sortDormByMaxPrice();
-        return ResponseEntity.ok(dorms);
     }
 }

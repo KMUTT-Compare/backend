@@ -1,10 +1,10 @@
 package sit.int371.capstoneproject.dtos;
 
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Staff;
 
 @Getter
@@ -16,7 +16,7 @@ public class StaffDTO {
     @Size(max = 50, message = "Staff name must not exceed 50 characters")
     private String staffName;
     @Valid //เช็คว่า fields ใน Address ครบหรือยัง
-    private Dormitory.Address address;
+    private Staff.Address address;
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email should be valid")
     private String email;

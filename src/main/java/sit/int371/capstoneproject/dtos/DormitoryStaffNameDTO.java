@@ -3,6 +3,7 @@ package sit.int371.capstoneproject.dtos;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.Decimal128;
 import sit.int371.capstoneproject.entities.Dormitory;
@@ -48,5 +49,4 @@ public class DormitoryStaffNameDTO {
     @NotNull(message = "Staff ID cannot be null")
     private int staffId;
     private String staffName;
-
 }

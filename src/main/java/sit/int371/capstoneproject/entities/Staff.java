@@ -1,13 +1,18 @@
 package sit.int371.capstoneproject.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+import sit.int371.capstoneproject.dtos.StaffDTO;
 
 @Getter
 @Setter
@@ -24,7 +29,7 @@ public class Staff {
     @Size(max = 50, message = "Staff name must not exceed 50 characters")
     private String staffName;
     @Valid //เช็คว่า fields ใน Address ครบหรือยัง
-    private Dormitory.Address address;
+    private Address address;
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email should be valid")
     private String email;
@@ -38,6 +43,8 @@ public class Staff {
     // Nested Address Class
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Address {
         @NotEmpty(message = "Dormitory number cannot be empty")
         private String dormNumber;
@@ -52,6 +59,5 @@ public class Staff {
         @NotEmpty(message = "Postal code cannot be empty")
         @Pattern(regexp = "\\d{5}", message = "Postal code must be a 5-digit number")
         private String postalCode;
-
     }
 }

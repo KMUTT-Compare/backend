@@ -36,8 +36,8 @@ import java.util.List;
 @Service
 public class FileService {
     private final String uploadDir = "cap-file-upload";
-//    private final String baseUrl = "http://localhost:8080/api/images";
-    private final String baseUrl = "https://kmutt-compare.sit.kmutt.ac.th/api/images";
+    private final String baseUrl = "http://localhost:8080/api/images";
+ //   private final String baseUrl = "https://kmutt-compare.sit.kmutt.ac.th/api/images";
     
     private final Tika tika = new Tika();
     @Autowired
@@ -45,6 +45,15 @@ public class FileService {
 
     @Autowired
     private StaffRepository staffRepository;
+
+    private boolean isValidImageType(String mimeType) {
+        return mimeType != null && (
+                mimeType.equals("image/jpeg") ||
+                        mimeType.equals("image/png") ||
+                        mimeType.equals("image/gif") ||
+                        mimeType.equals("image/bmp")
+        );
+    }
 
     public ResponseEntity<Resource> getImage(String fileId){
         try {
@@ -76,6 +85,12 @@ public class FileService {
                 if (multipartFile == null || multipartFile.isEmpty()) {
                     throw new BadRequestException("One or more files are null or empty");
                 }
+                // ตรวจสอบประเภทของไฟล์ (MIME Type)
+                String mimeType = multipartFile.getContentType();
+                if (!isValidImageType(mimeType)) {
+                    throw new BadRequestException("Invalid file type. Only JPEG, GIF, PNG, and BMP are allowed.");
+                }
+
                 String generateFileName = String.valueOf(UUIDv7.randomUUID());
                 Path filePath = Path.of(uploadDir, generateFileName);
                 Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);

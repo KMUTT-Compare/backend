@@ -2,6 +2,8 @@ package sit.int371.capstoneproject.entities;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.Decimal128;
@@ -59,6 +61,8 @@ public class Dormitory {
     // Nested Address Class
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Address {
         @NotEmpty(message = "Dormitory number cannot be empty")
         private String dormNumber;

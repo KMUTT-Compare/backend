@@ -47,7 +47,7 @@ public class DormitoryService {
     public DormitoryDTO createDorm(Dormitory dormitory) {
         // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
         if (!staffRepository.existsByStaffId(dormitory.getStaffId())) {
-            throw new ResourceNotFoundException("Staff id " + dormitory.getStaffId() + " not exited!!!");
+            throw new ResourceNotFoundException("Dormitory id " + dormitory.getStaffId() + " not exited!!!");
         }
 
         Dormitory addDorm = new Dormitory();
@@ -77,7 +77,7 @@ public class DormitoryService {
 
         // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
         if (!staffRepository.existsByStaffId(dormitoryDTO.getStaffId())) {
-            throw new ResourceNotFoundException("Staff id " + dormitoryDTO.getStaffId() + " not exited!!!");
+            throw new ResourceNotFoundException("Dormitory id " + dormitoryDTO.getStaffId() + " not exited!!!");
         }
         exitsDorm.setName(dormitoryDTO.getName());
         exitsDorm.setStatus(dormitoryDTO.getStatus());
@@ -102,9 +102,9 @@ public class DormitoryService {
     public String deleteDorm(Integer id){
         if (dormitoryRepository.existsByDormId(id)){
             dormitoryRepository.deleteByDormId(id);
-            return "Dormitory with ID " + id + " has been deleted successfully!";
+            return "Dormitory with Id " + id + " has been deleted successfully!";
         }else {
-            throw new ResourceNotFoundException("Dormitory with ID " + id + " dose not exited!!!");
+            throw new ResourceNotFoundException("Dormitory with Id " + id + " dose not exited!!!");
         }
     }
 
@@ -126,23 +126,5 @@ public class DormitoryService {
         }
 
         return dtoList;
-    }
-
-
-    // ทำ Sorting Dormitories ตามราคาของหอพักทั้ง ราคาสูงสุด, ราคาต่ำสุด
-    // Sort Dormitory by min_price
-    public List<DormitoryDTO> sortDormByMinPrice() {
-        List<Dormitory> dorms = dormitoryRepository.findAll(Sort.by(Sort.Direction.ASC, "min_price"));
-        return dorms.stream()
-                .map(dorm -> modelMapper.map(dorm, DormitoryDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    // Sort Dormitory by max_price
-    public List<DormitoryDTO> sortDormByMaxPrice() {
-        List<Dormitory> dorms = dormitoryRepository.findAll(Sort.by(Sort.Direction.DESC, "max_price"));
-        return dorms.stream()
-                .map(dorm -> modelMapper.map(dorm, DormitoryDTO.class))
-                .collect(Collectors.toList());
     }
 }
