@@ -51,7 +51,8 @@ public class FileService {
                 mimeType.equals("image/jpeg") ||
                         mimeType.equals("image/png") ||
                         mimeType.equals("image/gif") ||
-                        mimeType.equals("image/bmp")
+                        mimeType.equals("image/bmp") ||
+                        mimeType.equals("image/webp")
         );
     }
 
@@ -88,7 +89,7 @@ public class FileService {
                 // ตรวจสอบประเภทของไฟล์ (MIME Type)
                 String mimeType = multipartFile.getContentType();
                 if (!isValidImageType(mimeType)) {
-                    throw new BadRequestException("Invalid file type. Only JPEG, GIF, PNG, and BMP are allowed.");
+                    throw new BadRequestException("Invalid file type. Only JPEG, GIF, PNG, BMP and WEBP are allowed.");
                 }
 
                 String generateFileName = String.valueOf(UUIDv7.randomUUID());
