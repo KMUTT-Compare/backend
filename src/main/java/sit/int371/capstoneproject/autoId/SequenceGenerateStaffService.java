@@ -29,7 +29,7 @@ public class SequenceGenerateStaffService {
         // ดึงค่า staffId สูงสุดใน collection staff
         int maxStaffId = staffRepository.findTopByOrderByStaffIdDesc()
                 .map(Staff::getStaffId)
-                .orElse(0);
+                .orElse(1);
 
         // หาก Sequence เริ่มใหม่หรือมีค่าน้อยกว่า staffId สูงสุด ให้รีเซ็ต Sequence
         if (counter == null || counter.getSeq() <= maxStaffId) {
