@@ -29,7 +29,7 @@ public class SequenceGenerateUserService {
         // ดึงค่า userId สูงสุดใน collection user
         int maxUserId = userRepository.findTopByOrderByUserIdDesc()
                 .map(User::getUserId)
-                .orElse(0);
+                .orElse(1);
 
         // หาก Sequence เริ่มใหม่หรือมีค่าน้อยกว่า userId สูงสุด ให้รีเซ็ต Sequence
         if (counter == null || counter.getSeq() <= maxUserId) {
