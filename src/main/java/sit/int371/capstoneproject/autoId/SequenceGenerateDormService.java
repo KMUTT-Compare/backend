@@ -29,7 +29,7 @@ public class SequenceGenerateDormService {
         // ดึงค่า dormId สูงสุดใน collection dormitory
         int maxDormId = dormitoryRepository.findTopByOrderByDormIdDesc()
                 .map(Dormitory::getDormId)
-                .orElse(0);
+                .orElse(1);
 
         // หาก Sequence เริ่มใหม่หรือมีค่าน้อยกว่า dormId สูงสุด ให้รีเซ็ต Sequence
         if (counter == null || counter.getSeq() <= maxDormId) {
