@@ -94,4 +94,40 @@ public class FormService {
         addForm.setDormId(form.getDormId());
         return modelMapper.map(formRepository.save(addForm), FormCreateDTO.class);
     }
+
+    //Method -update/edit form
+    public FormCreateDTO updateDorm(Integer id, FormCreateDTO formCreateDTO){
+        Form exitsForm = formRepository.findByFormId(id).orElseThrow(
+                () -> new ResourceNotFoundException(id + "does not exited!!!"));
+        //ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!staffRepository.existsByStaffId(formCreateDTO.getStaffId())) {
+            throw new ResourceNotFoundException("Staff id " + formCreateDTO.getStaffId() + " not exited!!!");
+        }
+        //ตรวจสอบว่า dormId มีอยู่ในฐานข้อมูลหรือไม่
+        if (!dormitoryRepository.existsByDormId(formCreateDTO.getDormId())) {
+            throw new ResourceNotFoundException("Dormitory id " + formCreateDTO.getDormId() + " not exited!!!");
+        }
+
+        exitsForm.setUsername(formCreateDTO.getUsername());
+        exitsForm.setForm_date(formCreateDTO.getForm_date());
+        exitsForm.setEmail(formCreateDTO.getEmail());
+        exitsForm.setPhone(formCreateDTO.getPhone());
+        exitsForm.setDate_in(formCreateDTO.getDate_in());
+        exitsForm.setDate_out(formCreateDTO.getDate_out());
+        exitsForm.setStaffId(formCreateDTO.getStaffId());
+        exitsForm.setDormId(formCreateDTO.getDormId());
+        Form updatedForm = formRepository.save(exitsForm);
+        return modelMapper.map(updatedForm, FormCreateDTO.class);
+
+    }
+
+    //Method -delete form
+    public String deleteForm(Integer id){
+        if (formRepository.existsByFormId(id)){
+            formRepository.deleteByFormId(id);
+            return "Form with Id " + id + " has been deleted successfully!";
+        }else {
+            throw new ResourceNotFoundException("Form with Id " + id + " dose not exited!!!");
+        }
+    }
 }

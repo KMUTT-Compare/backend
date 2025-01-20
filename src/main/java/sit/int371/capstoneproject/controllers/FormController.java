@@ -55,4 +55,17 @@ public class FormController {
         Form form = modelMapper.map(formCreateDTO, Form.class);
         return formService.createForm(form);
     }
+
+    //Update Form
+    @PutMapping("/{id}")
+    public FormCreateDTO updatedForm(@PathVariable Integer id, @Valid @RequestBody FormCreateDTO formCreateDTO){
+        return formService.updateDorm(id, formCreateDTO);
+    }
+
+    //Delete Form
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletedForm(@PathVariable Integer id){
+        String message = formService.deleteForm(id);
+        return ResponseEntity.ok(message);
+    }
 }

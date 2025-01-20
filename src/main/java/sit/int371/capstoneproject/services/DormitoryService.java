@@ -96,7 +96,7 @@ public class DormitoryService {
 
         // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
         if (!staffRepository.existsByStaffId(dormitoryDTO.getStaffId())) {
-            throw new ResourceNotFoundException("Dormitory id " + dormitoryDTO.getStaffId() + " not exited!!!");
+            throw new ResourceNotFoundException("Staff id " + dormitoryDTO.getStaffId() + " not exited!!!");
         }
         exitsDorm.setDormName(dormitoryDTO.getDormName());
         exitsDorm.setStatus(dormitoryDTO.getStatus());
