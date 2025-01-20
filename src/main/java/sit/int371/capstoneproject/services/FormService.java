@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sit.int371.capstoneproject.dtos.FormCreateDTO;
 import sit.int371.capstoneproject.dtos.FormDTO;
 import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Form;
@@ -77,5 +78,20 @@ public class FormService {
         formDTO.setAddress(dormitory.getAddress());
 
         return formDTO;
+    }
+
+    //Method -create form
+    public FormCreateDTO createForm(Form form){
+        Form addForm = new Form();
+        addForm.setFormId(form.getFormId());
+        addForm.setUsername(form.getUsername());
+        addForm.setForm_date(form.getForm_date());
+        addForm.setEmail(form.getEmail());
+        addForm.setPhone(form.getPhone());
+        addForm.setDate_in(form.getDate_in());
+        addForm.setDate_out(form.getDate_out());
+        addForm.setStaffId(form.getStaffId());
+        addForm.setDormId(form.getDormId());
+        return modelMapper.map(formRepository.save(addForm), FormCreateDTO.class);
     }
 }
