@@ -27,6 +27,24 @@ public class DormitoryService {
     @Autowired
     private StaffRepository staffRepository;
 
+    //Method -find all dormitory และเรียกเข้า staffName มาโชว์ด้วย
+    public List<DormitoryStaffNameDTO> getAllDormitories() {
+        List<Dormitory> dormitories = dormitoryRepository.findAll();
+        List<DormitoryStaffNameDTO> dtoList = new ArrayList<>();
+
+        for (Dormitory dormitory : dormitories) {
+            DormitoryStaffNameDTO staffNameDTO = new DormitoryStaffNameDTO();
+            BeanUtils.copyProperties(dormitory, staffNameDTO); // คัดลอกข้อมูลทั่วไปจาก Dormitory
+
+            // ดึง staffName จาก Staff collection
+            staffRepository.findByStaffId(dormitory.getStaffId())
+                    .ifPresent(staff -> staffNameDTO.setStaffName(staff.getStaffName()));
+
+            dtoList.add(staffNameDTO);
+        }
+
+        return dtoList;
+    }
 
     //Method -find dormitory by id
     public DormitoryStaffNameDTO getDormById(Integer id) {
@@ -52,7 +70,7 @@ public class DormitoryService {
 
         Dormitory addDorm = new Dormitory();
         addDorm.setDormId(dormitory.getDormId());
-        addDorm.setName(dormitory.getName());
+        addDorm.setDormName(dormitory.getDormName());
         addDorm.setStatus(dormitory.getStatus());
         addDorm.setAddress(dormitory.getAddress());
         addDorm.setRoomCount(dormitory.getRoomCount());
@@ -66,6 +84,7 @@ public class DormitoryService {
         addDorm.setImage(dormitory.getImage());
         addDorm.setBuilding_facility(dormitory.getBuilding_facility());
         addDorm.setRoom_facility(dormitory.getRoom_facility());
+        addDorm.setScore(dormitory.getScore());
         addDorm.setStaffId(dormitory.getStaffId());
         return modelMapper.map(dormitoryRepository.save(dormitory), DormitoryDTO.class);
     }
@@ -79,7 +98,7 @@ public class DormitoryService {
         if (!staffRepository.existsByStaffId(dormitoryDTO.getStaffId())) {
             throw new ResourceNotFoundException("Dormitory id " + dormitoryDTO.getStaffId() + " not exited!!!");
         }
-        exitsDorm.setName(dormitoryDTO.getName());
+        exitsDorm.setDormName(dormitoryDTO.getDormName());
         exitsDorm.setStatus(dormitoryDTO.getStatus());
         exitsDorm.setAddress(dormitoryDTO.getAddress());
         exitsDorm.setRoomCount(dormitoryDTO.getRoomCount());
@@ -93,6 +112,7 @@ public class DormitoryService {
         exitsDorm.setImage(dormitoryDTO.getImage());
         exitsDorm.setBuilding_facility(dormitoryDTO.getBuilding_facility());
         exitsDorm.setRoom_facility(dormitoryDTO.getRoom_facility());
+        exitsDorm.setScore(dormitoryDTO.getScore());
         exitsDorm.setStaffId(dormitoryDTO.getStaffId());
         Dormitory updatedDormitory = dormitoryRepository.save(exitsDorm);
         return modelMapper.map(updatedDormitory, DormitoryDTO.class);
@@ -108,23 +128,4 @@ public class DormitoryService {
         }
     }
 
-
-    //เรียกเข้า staffName มาโชว์ด้วย
-    public List<DormitoryStaffNameDTO> getAllDormitories() {
-        List<Dormitory> dormitories = dormitoryRepository.findAll();
-        List<DormitoryStaffNameDTO> dtoList = new ArrayList<>();
-
-        for (Dormitory dormitory : dormitories) {
-            DormitoryStaffNameDTO staffNameDTO = new DormitoryStaffNameDTO();
-            BeanUtils.copyProperties(dormitory, staffNameDTO); // คัดลอกข้อมูลทั่วไปจาก Dormitory
-
-            // ดึง staffName จาก Staff collection
-            staffRepository.findByStaffId(dormitory.getStaffId())
-                    .ifPresent(staff -> staffNameDTO.setStaffName(staff.getStaffName()));
-
-            dtoList.add(staffNameDTO);
-        }
-
-        return dtoList;
-    }
 }

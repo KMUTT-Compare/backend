@@ -20,7 +20,7 @@ public class DormitoryStaffNameDTO {
     private int dormId;
     @NotEmpty(message = "Dormitory name cannot be empty")
     @Size(max = 50, message = "Dormitory name must not exceed 50 characters")
-    private String name;
+    private String dormName;
     @NotNull(message = "Dormitory status cannot be null")
     private DormitoryStatusEnum status;
     @Valid //เช็คว่า fields ใน Address ครบหรือยัง
@@ -46,6 +46,9 @@ public class DormitoryStaffNameDTO {
     private List<String> building_facility;
     @Size(min = 1, message = "At least one Room facility must be provided")
     private List<String> room_facility;
+    @Min(value = 0, message = "Score cannot be less than 0")
+    @Max(value = 5, message = "Score cannot be greater than 5")
+    private int score;
     @NotNull(message = "Staff ID cannot be null")
     private int staffId;
     private String staffName;

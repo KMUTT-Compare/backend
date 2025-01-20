@@ -33,7 +33,7 @@ public class DormitoryController {
         List<DormitoryStaffNameDTO> dormitories = dormitoryService.getAllDormitories(); // ดึง staffName จาก Staff collection
         // เช็คว่ามีข้อมูลหรือไม่ ถ้าไม่มีข้อมูลให้ส่ง 404
         if (dormitories.isEmpty()) {
-            throw new ResourceNotFoundException("No dormitory found!");
+            throw new ResourceNotFoundException("Dormitory not found!");
         }
         return ResponseEntity.ok(dormitories);
     }
