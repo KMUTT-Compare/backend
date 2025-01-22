@@ -55,6 +55,8 @@ public class Dormitory {
     private List<String> building_facility;
     @Size(min = 1, message = "At least one Room facility must be provided")
     private List<String> room_facility;
+    @NotNull(message = "Count All Facilities cannot be null")
+    private int count_facilities;
     @Min(value = 1, message = "Score cannot be less than 1")
     @Max(value = 5, message = "Score cannot be greater than 5")
     private int score;

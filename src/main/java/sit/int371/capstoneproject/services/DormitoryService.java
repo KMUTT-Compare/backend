@@ -61,13 +61,24 @@ public class DormitoryService {
         return staffNameDTO;
     }
 
-    //Method -create dormitory
+    //Method -create dormitory + count all facilities
     public DormitoryDTO createDorm(Dormitory dormitory) {
         // ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
         if (!staffRepository.existsByStaffId(dormitory.getStaffId())) {
             throw new ResourceNotFoundException("Dormitory id " + dormitory.getStaffId() + " not exited!!!");
         }
+        // คำนวณจำนวน facilities
+        int totalFacilities = 0;
+        if (dormitory.getRoom_facility() != null) {
+            totalFacilities += dormitory.getRoom_facility().size();
+        }
+        if (dormitory.getBuilding_facility() != null) {
+            totalFacilities += dormitory.getBuilding_facility().size();
+        }
+        // กำหนดค่า countFacilities
+        dormitory.setCount_facilities(totalFacilities);
 
+        // บันทึกลง DB
         Dormitory addDorm = new Dormitory();
         addDorm.setDormId(dormitory.getDormId());
         addDorm.setDormName(dormitory.getDormName());
@@ -98,6 +109,8 @@ public class DormitoryService {
         if (!staffRepository.existsByStaffId(dormitoryDTO.getStaffId())) {
             throw new ResourceNotFoundException("Staff id " + dormitoryDTO.getStaffId() + " not exited!!!");
         }
+
+        // บันทึกลง DB
         exitsDorm.setDormName(dormitoryDTO.getDormName());
         exitsDorm.setStatus(dormitoryDTO.getStatus());
         exitsDorm.setAddress(dormitoryDTO.getAddress());
@@ -112,10 +125,22 @@ public class DormitoryService {
         exitsDorm.setImage(dormitoryDTO.getImage());
         exitsDorm.setBuilding_facility(dormitoryDTO.getBuilding_facility());
         exitsDorm.setRoom_facility(dormitoryDTO.getRoom_facility());
+        // คำนวณและอัปเดตค่า countFacility
+        int totalFacilities = calculateFacilitiesCount(dormitoryDTO.getBuilding_facility(), dormitoryDTO.getRoom_facility());
+        exitsDorm.setCount_facilities(totalFacilities);
         exitsDorm.setScore(dormitoryDTO.getScore());
         exitsDorm.setStaffId(dormitoryDTO.getStaffId());
         Dormitory updatedDormitory = dormitoryRepository.save(exitsDorm);
         return modelMapper.map(updatedDormitory, DormitoryDTO.class);
+    }
+
+    // Method การคำนวณจำนวน facilities
+    private int calculateFacilitiesCount(List<String> buildingFacilities, List<String> roomFacilities) {
+        // นับจำนวน facilities ใน building_facility และ room_facility รวมกัน
+        int countBuildingFacilities = buildingFacilities != null ? buildingFacilities.size() : 0;
+        int countRoomFacilities = roomFacilities != null ? roomFacilities.size() : 0;
+        // รวมจำนวนทั้งหมด
+        return countBuildingFacilities + countRoomFacilities;
     }
 
     //Method -delete dormitory
