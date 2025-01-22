@@ -3,7 +3,9 @@ package sit.int371.capstoneproject.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sit.int371.capstoneproject.dtos.FavDormDTO;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
+import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Favorite;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
@@ -12,6 +14,7 @@ import sit.int371.capstoneproject.repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FavoriteService {
@@ -25,19 +28,24 @@ public class FavoriteService {
     private ModelMapper modelMapper;
 
 
-    //Method -find All fav
-    public List<Favorite> getAllFavorite(){
+    //Method -find all favorites
+    public List<FavDormDTO> getAllFavorites() {
         List<Favorite> favorites = favoriteRepository.findAll();
-        if(favorites.isEmpty()){
-            throw new ResourceNotFoundException("Favorite not found!");
+
+        if (favorites.isEmpty()) {
+            throw new ResourceNotFoundException("Favorites not found!");
         }
-        return favorites;
+
+        // แปลง List<Favorite> เป็น List<FavDormDTO>
+        return favorites.stream().map(this::convertToFavDormDTO).collect(Collectors.toList());
     }
 
     //Method -find favorite by id
-    public Favorite getFavById(Integer id){
-        return favoriteRepository.findByFavId(id)
+    public FavDormDTO getFavById(Integer id){
+        Favorite favorite = favoriteRepository.findByFavId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Favorite id " + id + " not found !!!"));
+
+        return convertToFavDormDTO(favorite);
     }
 
     //Method -create favorite
@@ -94,5 +102,25 @@ public class FavoriteService {
         }else {
             throw new ResourceNotFoundException("Favorite with ID " + id + " dose not exited!!!");
         }
+    }
+
+    // Helper Method - Convert Favorite to FavDormDTO
+    private FavDormDTO convertToFavDormDTO(Favorite favorite) {
+        // ดึงข้อมูล Dormitory จาก repository
+        Dormitory dormitory = dormitoryRepository.findByDormId(favorite.getDormId())
+                .orElseThrow(() -> new ResourceNotFoundException("Dormitory id " + favorite.getDormId() + " not found !!!"));
+
+        // แปลง Favorite เป็น FavDormDTO
+        FavDormDTO favDormDTO = modelMapper.map(favorite, FavDormDTO.class);
+
+        // ตั้งค่าเพิ่มเติมจาก Dormitory
+        favDormDTO.setDormName(dormitory.getDormName());
+        favDormDTO.setSize(dormitory.getSize());
+        favDormDTO.setMin_price(dormitory.getMin_price());
+        favDormDTO.setMax_price(dormitory.getMax_price());
+        favDormDTO.setDistance(dormitory.getDistance());
+        favDormDTO.setScore(dormitory.getScore());
+
+        return favDormDTO;
     }
 }

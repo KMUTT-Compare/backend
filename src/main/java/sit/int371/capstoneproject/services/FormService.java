@@ -35,6 +35,8 @@ public class FormService {
     public List<FormDTO> getAllForms() {
         // ดึงข้อมูลทั้งหมดจาก Form collection
         List<Form> forms = formRepository.findAll();
+        //**** ต้องเช็คก่อนว่ามี forms อยู่หรือป่าวววว check Error
+
         List<FormDTO> formDTOList = new ArrayList<>();
 
         for (Form form : forms) {

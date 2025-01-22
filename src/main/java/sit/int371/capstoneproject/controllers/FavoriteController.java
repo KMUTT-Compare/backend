@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.ListMapper;
 import sit.int371.capstoneproject.autoId.SequenceGenerateFavService;
+import sit.int371.capstoneproject.dtos.FavDormDTO;
 import sit.int371.capstoneproject.dtos.FavoriteDTO;
 import sit.int371.capstoneproject.entities.Favorite;
 import sit.int371.capstoneproject.services.FavoriteService;
@@ -30,15 +31,14 @@ public class FavoriteController {
 
     //Get All Favorites
     @GetMapping("")
-    public List<FavoriteDTO> getAllFavDTO(){
-        List<Favorite> favList = favoriteService.getAllFavorite();
-        return listMapper.mapList(favList, FavoriteDTO.class, modelMapper);
+    public List<FavDormDTO> getAllFavorites() {
+        return favoriteService.getAllFavorites();
     }
 
     // Get Favorite By id
     @GetMapping("/{id}")
-    public FavoriteDTO getFavDTO(@PathVariable Integer id) {
-        return modelMapper.map(favoriteService.getFavById(id), FavoriteDTO.class);
+    public FavDormDTO getFavById(@PathVariable Integer id) {
+        return favoriteService.getFavById(id);
     }
 
     @PostMapping()
