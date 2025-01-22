@@ -104,7 +104,7 @@ public class FavoriteService {
         }
     }
 
-    // Helper Method - Convert Favorite to FavDormDTO
+    // Convert Method - Convert Favorite to FavDormDTO
     private FavDormDTO convertToFavDormDTO(Favorite favorite) {
         // ดึงข้อมูล Dormitory จาก repository
         Dormitory dormitory = dormitoryRepository.findByDormId(favorite.getDormId())

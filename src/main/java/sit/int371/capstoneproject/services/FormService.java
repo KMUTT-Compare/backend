@@ -35,7 +35,9 @@ public class FormService {
     public List<FormDTO> getAllForms() {
         // ดึงข้อมูลทั้งหมดจาก Form collection
         List<Form> forms = formRepository.findAll();
-        //**** ต้องเช็คก่อนว่ามี forms อยู่หรือป่าวววว check Error
+        if(forms.isEmpty()){
+            throw new ResourceNotFoundException("Forms not found!");
+        }
 
         List<FormDTO> formDTOList = new ArrayList<>();
 
@@ -65,15 +67,15 @@ public class FormService {
         Form form = formRepository.findByFormId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Form id " + id + " not found !!!"));
 
-        //map basic fields from Form to FormDTO
+        //แปลง Form เป็น FormDTO
         FormDTO formDTO = modelMapper.map(form, FormDTO.class);
 
-        //Fetch staff details
+        //Fetch และเติมข้อมูล StaffName
         Staff staff = staffRepository.findByStaffId(form.getStaffId())
                 .orElseThrow(() -> new ResourceNotFoundException("Staff id " + form.getStaffId() + " not found!!!"));
         formDTO.setStaffName(staff.getStaffName());
 
-        //Fetch dormitory details
+        //Fetch และเติมข้อมูล Dormitory
         Dormitory dormitory = dormitoryRepository.findByDormId(form.getDormId())
                 .orElseThrow(() -> new ResourceNotFoundException("Dormitory id " + form.getDormId() + " not found!!!"));
         formDTO.setDormName(dormitory.getDormName());
