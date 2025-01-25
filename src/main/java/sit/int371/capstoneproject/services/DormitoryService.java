@@ -153,20 +153,4 @@ public class DormitoryService {
         }
     }
 
-    // ทำ Sorting Dormitories ตามราคาของหอพักทั้ง ราคาสูงสุด, ราคาต่ำสุด
-    // Sort Dormitory by min_price
-    public List<DormitoryDTO> sortDormByMinPrice() {
-        List<Dormitory> dorms = dormitoryRepository.findAll(Sort.by(Sort.Direction.ASC, "min_price"));
-        return dorms.stream()
-                .map(dorm -> modelMapper.map(dorm, DormitoryDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    // Sort Dormitory by max_price
-    public List<DormitoryDTO> sortDormByMaxPrice() {
-        List<Dormitory> dorms = dormitoryRepository.findAll(Sort.by(Sort.Direction.DESC, "max_price"));
-        return dorms.stream()
-                .map(dorm -> modelMapper.map(dorm, DormitoryDTO.class))
-                .collect(Collectors.toList());
-    }
 }
