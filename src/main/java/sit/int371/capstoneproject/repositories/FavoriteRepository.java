@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface FavoriteRepository extends MongoRepository<Favorite, ObjectId> {
     Optional<Favorite> findByFavId(Integer id);
-    boolean existsByFavId(Integer id);
-    void deleteByFavId(Integer id);
+
+    boolean existsFavoriteByDormId(Integer dormId);
+    void deleteFavoriteByDormId(Integer dormId);
 
     Optional<Favorite> findTopByOrderByFavIdDesc();
 }

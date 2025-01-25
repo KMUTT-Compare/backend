@@ -1,5 +1,6 @@
 package sit.int371.capstoneproject.services;
 
+import org.bson.types.Decimal128;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import sit.int371.capstoneproject.repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,33 +96,39 @@ public class FavoriteService {
         return modelMapper.map(favoriteRepository.save(exitsFav), FavoriteDTO.class);
     }
 
-    //Method -delete favorite
-    public String deleteFav(Integer id){
-        if (favoriteRepository.existsByFavId(id)){
-            favoriteRepository.deleteByFavId(id);
-            return "Favorite with ID " + id + " has been deleted successfully!";
+    //Method -delete favorite by dorm Id
+    public String deleteFavByDormId(Integer dormId){
+        if (favoriteRepository.existsFavoriteByDormId(dormId)){
+            favoriteRepository.deleteFavoriteByDormId(dormId);
+            return "Favorite with Dormitory ID " + dormId + " has been deleted successfully!";
         }else {
-            throw new ResourceNotFoundException("Favorite with ID " + id + " dose not exited!!!");
+            throw new ResourceNotFoundException("Dormitory Id in Favorite " + dormId + " dose not exited!!!");
         }
     }
 
     // Convert Method - Convert Favorite to FavDormDTO
     private FavDormDTO convertToFavDormDTO(Favorite favorite) {
-        // ดึงข้อมูล Dormitory จาก repository
-        Dormitory dormitory = dormitoryRepository.findByDormId(favorite.getDormId())
-                .orElseThrow(() -> new ResourceNotFoundException("Dormitory id " + favorite.getDormId() + " not found !!!"));
-
         // แปลง Favorite เป็น FavDormDTO
         FavDormDTO favDormDTO = modelMapper.map(favorite, FavDormDTO.class);
 
-        // ตั้งค่าเพิ่มเติมจาก Dormitory
-        favDormDTO.setDormName(dormitory.getDormName());
-        favDormDTO.setSize(dormitory.getSize());
-        favDormDTO.setMin_price(dormitory.getMin_price());
-        favDormDTO.setMax_price(dormitory.getMax_price());
-        favDormDTO.setDistance(dormitory.getDistance());
-        favDormDTO.setScore(dormitory.getScore());
-
+        Optional<Dormitory> dormitoryOptional = dormitoryRepository.findByDormId(favorite.getDormId());
+        if(dormitoryOptional.isPresent()){
+            Dormitory dormitory = dormitoryOptional.get();
+            favDormDTO.setDormName(dormitory.getDormName());
+            favDormDTO.setSize(dormitory.getSize());
+            favDormDTO.setMin_price(dormitory.getMin_price());
+            favDormDTO.setMax_price(dormitory.getMax_price());
+            favDormDTO.setDistance(dormitory.getDistance());
+            favDormDTO.setScore(dormitory.getScore());
+        }else {
+            //กรณี dormId นั้นๆถูกลบ ทำให้สามารถแสดงข้อมูลของ favorite ได้
+            favDormDTO.setDormName("This Dormitory out of service, now!");
+            favDormDTO.setSize(new Decimal128(0));
+            favDormDTO.setMin_price(new Decimal128(0));
+            favDormDTO.setMax_price(new Decimal128(0));
+            favDormDTO.setDistance(new Decimal128(0));
+            favDormDTO.setScore(0);
+        }
         return favDormDTO;
     }
 }

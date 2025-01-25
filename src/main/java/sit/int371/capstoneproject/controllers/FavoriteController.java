@@ -54,10 +54,10 @@ public class FavoriteController {
         return favoriteService.updateFav(id, favoriteDTO);
     }
 
-    // Delete Staff
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletedFav(@PathVariable Integer id){
-        String message = favoriteService.deleteFav(id);
+    // Delete Favorite
+    @DeleteMapping("/dorm/{dormId}")
+    public ResponseEntity<String> deletedFavByDormId(@PathVariable Integer dormId){
+        String message = favoriteService.deleteFavByDormId(dormId);
         return ResponseEntity.ok(message);
     }
 }
