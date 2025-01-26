@@ -59,7 +59,7 @@ public class Dormitory {
     private int count_facilities;
     @Min(value = 1, message = "Score cannot be less than 1")
     @Max(value = 5, message = "Score cannot be greater than 5")
-    private int score;
+    private int score = 1;
     @NotNull(message = "Staff ID cannot be null")
     private int staffId;
 
