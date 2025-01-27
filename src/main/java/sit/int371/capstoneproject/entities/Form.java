@@ -25,7 +25,7 @@ public class Form {
     private Date form_date;
     @NotEmpty(message = "User name cannot be empty")
     @Size(max = 50, message = "User name must not exceed 50 characters")
-    private String username;
+    private String name;
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email should be valid")
     private String email;
@@ -37,6 +37,8 @@ public class Form {
     private Date date_in;
     @NotNull(message = "Form out date cannot be null")
     private Date date_out;
+    @Size(max = 200, message = "Description details must not exceed 200 characters")
+    private String description = "null";
 
     @NotNull(message = "Staff ID cannot be null")
     private int staffId;

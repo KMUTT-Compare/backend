@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.autoId.SequenceGenerateDormService;
 import sit.int371.capstoneproject.dtos.DormitoryDTO;
-import sit.int371.capstoneproject.dtos.DormitoryStaffNameDTO;
+import sit.int371.capstoneproject.dtos.DormitoryStaffDTO;
 import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.services.DormitoryService;
@@ -29,8 +29,8 @@ public class DormitoryController {
 
     //Get All Dormitories
     @GetMapping
-    public ResponseEntity<List<DormitoryStaffNameDTO>> getAllDormitories() {
-        List<DormitoryStaffNameDTO> dormitories = dormitoryService.getAllDormitories(); // ดึง staffName จาก Staff collection
+    public ResponseEntity<List<DormitoryStaffDTO>> getAllDormitories() {
+        List<DormitoryStaffDTO> dormitories = dormitoryService.getAllDormitories(); // ดึง staffName จาก Staff collection
         // เช็คว่ามีข้อมูลหรือไม่ ถ้าไม่มีข้อมูลให้ส่ง 404
         if (dormitories.isEmpty()) {
             throw new ResourceNotFoundException("Dormitory not found!");
@@ -40,8 +40,8 @@ public class DormitoryController {
 
     //Get Dormitory by id
     @GetMapping("/{id}")
-    public ResponseEntity<DormitoryStaffNameDTO> getDormitoryById(@PathVariable Integer id) {
-        DormitoryStaffNameDTO dormitory = dormitoryService.getDormById(id); // ดึง staffName จาก Staff collection
+    public ResponseEntity<DormitoryStaffDTO> getDormitoryById(@PathVariable Integer id) {
+        DormitoryStaffDTO dormitory = dormitoryService.getDormById(id); // ดึง staffName จาก Staff collection
         return ResponseEntity.ok(dormitory);
     }
 

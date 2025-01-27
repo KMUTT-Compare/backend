@@ -21,13 +21,10 @@ import java.util.List;
 public class FormService {
     @Autowired
     private FormRepository formRepository;
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private StaffRepository staffRepository;
-
     @Autowired
     private DormitoryRepository dormitoryRepository;
 
@@ -40,14 +37,17 @@ public class FormService {
         }
 
         List<FormDTO> formDTOList = new ArrayList<>();
-
         for (Form form : forms) {
             FormDTO formDTO = new FormDTO();
             BeanUtils.copyProperties(form, formDTO); // คัดลอกข้อมูลทั่วไปจาก Form
 
             // ดึง staffName จาก Staff collection
             staffRepository.findByStaffId(form.getStaffId())
-                    .ifPresent(staff -> formDTO.setStaffName(staff.getStaffName()));
+                    .ifPresent(staff -> {
+                        formDTO.setStaffName(staff.getStaffName());
+                        formDTO.setStaffEmail(staff.getStaffEmail());
+                        formDTO.setStaffPhone(staff.getStaffPhone());
+                    });
 
             // ดึง dormName และ dormAddress จาก Dormitory collection
             dormitoryRepository.findByDormId(form.getDormId())
@@ -55,10 +55,8 @@ public class FormService {
                         formDTO.setDormName(dorm.getDormName());
                         formDTO.setAddress(dorm.getAddress());
                     });
-
             formDTOList.add(formDTO); // เพิ่มข้อมูลในรายการ
         }
-
         return formDTOList; // คืนค่ารายการของ FormDTO
     }
 
@@ -88,12 +86,13 @@ public class FormService {
     public FormCreateDTO createForm(Form form){
         Form addForm = new Form();
         addForm.setFormId(form.getFormId());
-        addForm.setUsername(form.getUsername());
+        addForm.setName(form.getName());
         addForm.setForm_date(form.getForm_date());
         addForm.setEmail(form.getEmail());
         addForm.setPhone(form.getPhone());
         addForm.setDate_in(form.getDate_in());
         addForm.setDate_out(form.getDate_out());
+        addForm.setDescription(form.getDescription());
         addForm.setStaffId(form.getStaffId());
         addForm.setDormId(form.getDormId());
         return modelMapper.map(formRepository.save(addForm), FormCreateDTO.class);
@@ -112,17 +111,17 @@ public class FormService {
             throw new ResourceNotFoundException("Dormitory id " + formCreateDTO.getDormId() + " not exited!!!");
         }
 
-        exitsForm.setUsername(formCreateDTO.getUsername());
+        exitsForm.setName(formCreateDTO.getName());
         exitsForm.setForm_date(formCreateDTO.getForm_date());
         exitsForm.setEmail(formCreateDTO.getEmail());
         exitsForm.setPhone(formCreateDTO.getPhone());
         exitsForm.setDate_in(formCreateDTO.getDate_in());
         exitsForm.setDate_out(formCreateDTO.getDate_out());
+        exitsForm.setDescription(formCreateDTO.getDescription());
         exitsForm.setStaffId(formCreateDTO.getStaffId());
         exitsForm.setDormId(formCreateDTO.getDormId());
         Form updatedForm = formRepository.save(exitsForm);
         return modelMapper.map(updatedForm, FormCreateDTO.class);
-
     }
 
     //Method -delete form

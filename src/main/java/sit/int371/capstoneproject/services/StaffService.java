@@ -15,7 +15,6 @@ import java.util.List;
 public class StaffService {
     @Autowired
     private StaffRepository staffRepository;
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -40,9 +39,9 @@ public class StaffService {
         Staff addStaff = new Staff();
         addStaff.setStaffId(staff.getStaffId());
         addStaff.setStaffName(staff.getStaffName());
-        addStaff.setAddress(staff.getAddress());
-        addStaff.setEmail(staff.getEmail());
-        addStaff.setPhone(staff.getPhone());
+        addStaff.setStaffAddress(staff.getStaffAddress());
+        addStaff.setStaffEmail(staff.getStaffEmail());
+        addStaff.setStaffPhone(staff.getStaffPhone());
         return modelMapper.map(staffRepository.save(staff), StaffDTO.class);
     }
 
@@ -51,9 +50,9 @@ public class StaffService {
         Staff exitsStaff = staffRepository.findByStaffId(id).orElseThrow(
                 () -> new ResourceNotFoundException("Staff id" + id + " does not exited!!!"));
         exitsStaff.setStaffName(staffDTO.getStaffName());
-        exitsStaff.setAddress(staffDTO.getAddress());
-        exitsStaff.setEmail(staffDTO.getEmail());
-        exitsStaff.setPhone(staffDTO.getPhone());
+        exitsStaff.setStaffAddress(staffDTO.getStaffAddress());
+        exitsStaff.setStaffEmail(staffDTO.getStaffEmail());
+        exitsStaff.setStaffPhone(staffDTO.getStaffPhone());
         Staff updatedStaff = staffRepository.save(exitsStaff);
         return modelMapper.map(updatedStaff, StaffDTO.class);
     }
