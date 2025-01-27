@@ -13,6 +13,8 @@ public class FormCreateDTO {
     private int formId;
     @NotNull(message = "Form date cannot be null")
     private Date form_date;
+    @NotNull(message = "User ID cannot be null")
+    private int userId;
     @NotEmpty(message = "User name cannot be empty")
     @Size(max = 50, message = "User name must not exceed 50 characters")
     private String name;

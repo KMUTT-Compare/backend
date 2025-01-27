@@ -5,12 +5,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sit.int371.capstoneproject.ListMapper;
 import sit.int371.capstoneproject.autoId.SequenceGenerateFormService;
-import sit.int371.capstoneproject.dtos.DormitoryDTO;
 import sit.int371.capstoneproject.dtos.FormCreateDTO;
 import sit.int371.capstoneproject.dtos.FormDTO;
-import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Form;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
 import sit.int371.capstoneproject.services.FormService;
@@ -25,8 +22,7 @@ public class FormController {
     private FormService formService;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private ListMapper listMapper;
+
 
     @Autowired
     private SequenceGenerateFormService sequenceGenerateFormService;
@@ -44,6 +40,13 @@ public class FormController {
     @GetMapping("/{id}")
     public ResponseEntity<FormDTO> getFormById(@PathVariable Integer id) {
         FormDTO formDTO = formService.getFormById(id);
+        return ResponseEntity.ok(formDTO);
+    }
+
+    // Get Form By user id
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<FormDTO>> getFormByUserId(@PathVariable Integer userId) {
+        List<FormDTO> formDTO = formService.getFormsByUserId(userId);
         return ResponseEntity.ok(formDTO);
     }
 

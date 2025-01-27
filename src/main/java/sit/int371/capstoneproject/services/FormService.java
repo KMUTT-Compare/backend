@@ -16,6 +16,7 @@ import sit.int371.capstoneproject.repositories.StaffRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FormService {
@@ -84,6 +85,34 @@ public class FormService {
         return formDTO;
     }
 
+    public List<FormDTO> getFormsByUserId(Integer userId) {
+        List<Form> forms = formRepository.findByUserId(userId);
+
+        if (forms.isEmpty()) {
+            throw new ResourceNotFoundException("Forms by User ID " + userId + " not found !!!");
+        }
+
+        return forms.stream().map(form -> {
+            // แปลง Form เป็น FormDTO
+            FormDTO formDTO = modelMapper.map(form, FormDTO.class);
+
+            // Fetch และเติมข้อมูล Staff
+            Staff staff = staffRepository.findByStaffId(form.getStaffId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Staff ID " + form.getStaffId() + " not found!!!"));
+            formDTO.setStaffName(staff.getStaffName());
+            formDTO.setStaffEmail(staff.getStaffEmail());
+            formDTO.setStaffPhone(staff.getStaffPhone());
+
+            // Fetch และเติมข้อมูล Dormitory
+            Dormitory dormitory = dormitoryRepository.findByDormId(form.getDormId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Dormitory ID " + form.getDormId() + " not found!!!"));
+            formDTO.setDormName(dormitory.getDormName());
+            formDTO.setAddress(dormitory.getAddress());
+
+            return formDTO;
+        }).toList();
+    }
+
     //Method -create form
     public FormCreateDTO createForm(Form form){
         Form addForm = new Form();
@@ -97,6 +126,7 @@ public class FormService {
         addForm.setDescription(form.getDescription());
         addForm.setStaffId(form.getStaffId());
         addForm.setDormId(form.getDormId());
+        addForm.setUserId(form.getUserId());
         return modelMapper.map(formRepository.save(addForm), FormCreateDTO.class);
     }
 
@@ -122,6 +152,7 @@ public class FormService {
         exitsForm.setDescription(formCreateDTO.getDescription());
         exitsForm.setStaffId(formCreateDTO.getStaffId());
         exitsForm.setDormId(formCreateDTO.getDormId());
+        exitsForm.setUserId(formCreateDTO.getUserId());
         Form updatedForm = formRepository.save(exitsForm);
         return modelMapper.map(updatedForm, FormCreateDTO.class);
     }
