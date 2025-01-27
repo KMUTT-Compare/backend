@@ -72,6 +72,8 @@ public class FormService {
         Staff staff = staffRepository.findByStaffId(form.getStaffId())
                 .orElseThrow(() -> new ResourceNotFoundException("Staff id " + form.getStaffId() + " not found!!!"));
         formDTO.setStaffName(staff.getStaffName());
+        formDTO.setStaffEmail(staff.getStaffEmail());
+        formDTO.setStaffPhone(staff.getStaffPhone());
 
         //Fetch และเติมข้อมูล Dormitory
         Dormitory dormitory = dormitoryRepository.findByDormId(form.getDormId())
