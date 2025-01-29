@@ -10,13 +10,13 @@ import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Form;
 import sit.int371.capstoneproject.entities.Staff;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
+import sit.int371.capstoneproject.mails.MailMessageServiceApi;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.FormRepository;
 import sit.int371.capstoneproject.repositories.StaffRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FormService {
@@ -28,6 +28,15 @@ public class FormService {
     private StaffRepository staffRepository;
     @Autowired
     private DormitoryRepository dormitoryRepository;
+    @Autowired
+    public MailMessageServiceApi mailMessageServiceApi;
+//    @Autowired
+//    private ApplicationEventPublisher eventPublisher;
+//    @Autowired
+//    public FormService(FormRepository formRepository, ApplicationEventPublisher eventPublisher) {
+//        this.formRepository = formRepository;
+//        this.eventPublisher = eventPublisher;
+//    }
 
     //Methode -get all forms
     public List<FormDTO> getAllForms() {
@@ -127,7 +136,15 @@ public class FormService {
         addForm.setStaffId(form.getStaffId());
         addForm.setDormId(form.getDormId());
         addForm.setUserId(form.getUserId());
-        return modelMapper.map(formRepository.save(addForm), FormCreateDTO.class);
+        //save to database
+        Form saveForm = formRepository.save(addForm);
+        //ดึงข้อมูล Staff ผ่าน staffId
+        Staff staff = staffRepository.findByStaffId(form.getStaffId()).orElseThrow(
+                () -> new ResourceNotFoundException("Staff does not exist!"));
+        //ส่งเมลไปยัง staff หลังจาก Form ถูกบันทึก
+        mailMessageServiceApi.sendFormDetails(staff.getStaffEmail(), saveForm.getFormId());
+        //แปลงเป็น FormCreateDTO และส่งกลับ
+        return modelMapper.map(saveForm, FormCreateDTO.class);
     }
 
     //Method -update/edit form
