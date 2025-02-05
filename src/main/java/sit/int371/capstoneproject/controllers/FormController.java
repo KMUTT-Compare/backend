@@ -3,6 +3,7 @@ package sit.int371.capstoneproject.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.int371.capstoneproject.autoId.SequenceGenerateFormService;
@@ -52,11 +53,16 @@ public class FormController {
 
     //Create Form
     @PostMapping("")
-    public FormCreateDTO createdForm(@Valid @RequestBody FormCreateDTO formCreateDTO){
-        //generate form id
-        formCreateDTO.setFormId((int) sequenceGenerateFormService.generateSequence(Form.SEQUENCE_NAME));
+    public FormCreateDTO createdForm(@Valid @RequestBody FormCreateDTO formCreateDTO) {
+        // Generate formId และ map DTO ไปเป็น Entity
         Form form = modelMapper.map(formCreateDTO, Form.class);
-        return formService.createForm(form);
+        form.setFormId((int) sequenceGenerateFormService.generateSequence(Form.SEQUENCE_NAME));
+
+        // บันทึก Form ผ่าน Service
+        FormCreateDTO createdForm = formService.createForm(form);
+
+        // ส่ง Response กลับโดยมี HTTP 201 Created
+        return createdForm;
     }
 
     //Update Form

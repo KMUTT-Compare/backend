@@ -10,7 +10,7 @@ import sit.int371.capstoneproject.entities.Dormitory;
 import sit.int371.capstoneproject.entities.Form;
 import sit.int371.capstoneproject.entities.Staff;
 import sit.int371.capstoneproject.exceptions.ResourceNotFoundException;
-import sit.int371.capstoneproject.mails.MailMessageServiceApi;
+import sit.int371.capstoneproject.mails.EmailService;
 import sit.int371.capstoneproject.repositories.DormitoryRepository;
 import sit.int371.capstoneproject.repositories.FormRepository;
 import sit.int371.capstoneproject.repositories.StaffRepository;
@@ -28,15 +28,9 @@ public class FormService {
     private StaffRepository staffRepository;
     @Autowired
     private DormitoryRepository dormitoryRepository;
+
     @Autowired
-    public MailMessageServiceApi mailMessageServiceApi;
-//    @Autowired
-//    private ApplicationEventPublisher eventPublisher;
-//    @Autowired
-//    public FormService(FormRepository formRepository, ApplicationEventPublisher eventPublisher) {
-//        this.formRepository = formRepository;
-//        this.eventPublisher = eventPublisher;
-//    }
+    private EmailService emailService;
 
     //Methode -get all forms
     public List<FormDTO> getAllForms() {
@@ -141,9 +135,22 @@ public class FormService {
         //ดึงข้อมูล Staff ผ่าน staffId
         Staff staff = staffRepository.findByStaffId(form.getStaffId()).orElseThrow(
                 () -> new ResourceNotFoundException("Staff does not exist!"));
-        //ส่งเมลไปยัง staff หลังจาก Form ถูกบันทึก
-        mailMessageServiceApi.sendFormDetails(staff.getStaffEmail(), saveForm.getFormId());
-        //แปลงเป็น FormCreateDTO และส่งกลับ
+        // ส่งอีเมลไปยัง staff หลังจากการสร้าง Form
+        String subject = "New Form Submission for Dormitory Reservation";
+        String body = "Dear " + staff.getStaffName() + ",\n\n" +
+                "A new form has been submitted for dormitory reservation. " +
+                "Here are the details:\n\n" +
+                "Form ID: " + saveForm.getFormId() + "\n" +
+                "Name: " + saveForm.getName() + "\n" +
+                "Phone: " + saveForm.getPhone() + "\n" +
+                "Email: " + saveForm.getEmail() + "\n" +
+                "Date In: " + saveForm.getDate_in() + "\n" +
+                "Date Out: " + saveForm.getDate_out() + "\n\n" +
+                "Kind regards,\nYour Dormitory Reservation System";
+
+        emailService.sendEmail(staff.getStaffEmail(), subject, body);
+
+        // แปลง Form ที่บันทึกแล้วเป็น FormCreateDTO เพื่อส่งกลับ
         return modelMapper.map(saveForm, FormCreateDTO.class);
     }
 
