@@ -145,13 +145,18 @@ public class FormService {
                 "Phone: " + saveForm.getPhone() + "\n" +
                 "Email: " + saveForm.getEmail() + "\n" +
                 "Date In: " + saveForm.getDate_in() + "\n" +
-                "Date Out: " + saveForm.getDate_out() + "\n\n" +
-                "Kind regards,\nYour Dormitory Reservation System";
+                "Date Out: " + saveForm.getDate_out() + "\n\n" ;
+                // เช็คว่า description มีค่าหรือไม่ ถ้ามีให้เพิ่มลงไปในอีเมล
+                if (saveForm.getDescription() != null && !saveForm.getDescription().isEmpty()) {
+                    body += "Description: " + saveForm.getDescription() + "\n\n";
+                }
+                body += "Kind regards,\nYour Dormitory Reservation System";
 
-        emailService.sendEmail(staff.getStaffEmail(), subject, body);
+                // ส่งอีเมล
+                emailService.sendEmail(staff.getStaffEmail(), subject, body);
 
-        // แปลง Form ที่บันทึกแล้วเป็น FormCreateDTO เพื่อส่งกลับ
-        return modelMapper.map(saveForm, FormCreateDTO.class);
+                // แปลง Form ที่บันทึกแล้วเป็น FormCreateDTO เพื่อส่งกลับ
+                return modelMapper.map(saveForm, FormCreateDTO.class);
     }
 
     //Method -update/edit form
