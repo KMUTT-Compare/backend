@@ -25,7 +25,7 @@ public class DormitoryService {
     @Autowired
     private StaffRepository staffRepository;
 
-    //Method -find all dormitory และเรียกเข้า staffName, staffPhone มาโชว์ด้วย
+    //Method -find all dormitory และเรียกเข้า staffName, staffPhone, staffEmail มาโชว์ด้วย
     public List<DormitoryStaffDTO> getAllDormitories() {
         List<Dormitory> dormitories = dormitoryRepository.findAll();
         List<DormitoryStaffDTO> dtoList = new ArrayList<>();
@@ -38,6 +38,7 @@ public class DormitoryService {
             staffRepository.findByStaffId(dormitory.getStaffId())
                     .ifPresent(staff -> {
                         dormStaffDTO.setStaffName(staff.getStaffName());
+                        dormStaffDTO.setStaffEmail(staff.getStaffEmail());
                         dormStaffDTO.setStaffPhone(staff.getStaffPhone());
                     });
 
@@ -59,6 +60,7 @@ public class DormitoryService {
         staffRepository.findByStaffId(dormitory.getStaffId())
                 .ifPresent(staff -> {
                     dormStaffDTO.setStaffName(staff.getStaffName());
+                    dormStaffDTO.setStaffEmail(staff.getStaffEmail());
                     dormStaffDTO.setStaffPhone(staff.getStaffPhone());
                 });
 

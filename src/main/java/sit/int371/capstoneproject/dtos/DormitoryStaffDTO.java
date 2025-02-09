@@ -53,5 +53,6 @@ public class DormitoryStaffDTO {
     @NotNull(message = "Staff ID cannot be null")
     private int staffId;
     private String staffName;
+    private String staffEmail;
     private String staffPhone;
 }

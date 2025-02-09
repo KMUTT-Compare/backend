@@ -118,6 +118,17 @@ public class FormService {
 
     //Method -create form
     public FormCreateDTO createForm(Form form){
+        // ตรวจสอบว่ามี dormitory หรือไม่
+        Dormitory dormitory = dormitoryRepository.findByDormId(form.getDormId())
+                .orElseThrow(() -> new ResourceNotFoundException("Dormitory ID " + form.getDormId() + " not found!!!"));
+
+        // ดึง staffId จาก dormitory
+        Integer staffId = dormitory.getStaffId();
+
+        // ตรวจสอบว่ามี staff หรือไม่
+        Staff staff = staffRepository.findByStaffId(staffId)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff ID " + staffId + " not found!!!"));
+
         Form addForm = new Form();
         addForm.setFormId(form.getFormId());
         addForm.setName(form.getName());
@@ -127,14 +138,13 @@ public class FormService {
         addForm.setDate_in(form.getDate_in());
         addForm.setDate_out(form.getDate_out());
         addForm.setDescription(form.getDescription());
-        addForm.setStaffId(form.getStaffId());
         addForm.setDormId(form.getDormId());
         addForm.setUserId(form.getUserId());
+        // Define staffId ที่ดึงจาก dormitory
+        addForm.setStaffId(staffId);  // บันทึก staffId ลงใน Form
+
         //save to database
         Form saveForm = formRepository.save(addForm);
-        //ดึงข้อมูล Staff ผ่าน staffId
-        Staff staff = staffRepository.findByStaffId(form.getStaffId()).orElseThrow(
-                () -> new ResourceNotFoundException("Staff does not exist!"));
         // ส่งอีเมลไปยัง staff หลังจากการสร้าง Form
         String subject = "New Form Submission for Dormitory Reservation";
         String body = "Dear " + staff.getStaffName() + ",\n\n" +
@@ -163,14 +173,17 @@ public class FormService {
     public FormCreateDTO updateDorm(Integer id, FormCreateDTO formCreateDTO){
         Form exitsForm = formRepository.findByFormId(id).orElseThrow(
                 () -> new ResourceNotFoundException(id + "does not exited!!!"));
-        //ตรวจสอบว่า staffId มีอยู่ในฐานข้อมูลหรือไม่
-        if (!staffRepository.existsByStaffId(formCreateDTO.getStaffId())) {
-            throw new ResourceNotFoundException("Staff id " + formCreateDTO.getStaffId() + " not exited!!!");
-        }
-        //ตรวจสอบว่า dormId มีอยู่ในฐานข้อมูลหรือไม่
-        if (!dormitoryRepository.existsByDormId(formCreateDTO.getDormId())) {
-            throw new ResourceNotFoundException("Dormitory id " + formCreateDTO.getDormId() + " not exited!!!");
-        }
+
+        // ตรวจสอบว่ามี dormitory หรือไม่
+        Dormitory dormitory = dormitoryRepository.findByDormId(formCreateDTO.getDormId())
+                .orElseThrow(() -> new ResourceNotFoundException("Dormitory ID " + formCreateDTO.getDormId() + " not found!!!"));
+
+        // ดึง staffId จาก dormitory
+        Integer staffId = dormitory.getStaffId();
+
+        // ตรวจสอบว่ามี staff หรือไม่
+        Staff staff = staffRepository.findByStaffId(staffId)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff ID " + staffId + " not found!!!"));
 
         exitsForm.setName(formCreateDTO.getName());
         exitsForm.setForm_date(formCreateDTO.getForm_date());
@@ -179,9 +192,10 @@ public class FormService {
         exitsForm.setDate_in(formCreateDTO.getDate_in());
         exitsForm.setDate_out(formCreateDTO.getDate_out());
         exitsForm.setDescription(formCreateDTO.getDescription());
-        exitsForm.setStaffId(formCreateDTO.getStaffId());
         exitsForm.setDormId(formCreateDTO.getDormId());
         exitsForm.setUserId(formCreateDTO.getUserId());
+        // Define staffId ที่ดึงจาก dormitory
+        exitsForm.setStaffId(staffId);  // บันทึก staffId ลงใน Form
         Form updatedForm = formRepository.save(exitsForm);
         return modelMapper.map(updatedForm, FormCreateDTO.class);
     }

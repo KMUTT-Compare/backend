@@ -57,11 +57,7 @@ public class FormController {
         // Generate formId และ map DTO ไปเป็น Entity
         Form form = modelMapper.map(formCreateDTO, Form.class);
         form.setFormId((int) sequenceGenerateFormService.generateSequence(Form.SEQUENCE_NAME));
-
-        // บันทึก Form ผ่าน Service
         FormCreateDTO createdForm = formService.createForm(form);
-
-        // ส่ง Response กลับโดยมี HTTP 201 Created
         return createdForm;
     }
 
