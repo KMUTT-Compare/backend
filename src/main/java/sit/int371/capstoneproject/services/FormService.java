@@ -172,7 +172,7 @@ public class FormService {
     //Method -update/edit form
     public FormCreateDTO updateDorm(Integer id, FormCreateDTO formCreateDTO){
         Form exitsForm = formRepository.findByFormId(id).orElseThrow(
-                () -> new ResourceNotFoundException(id + "does not exited!!!"));
+                () -> new ResourceNotFoundException(id + " does not exited!!!"));
 
         // ตรวจสอบว่ามี dormitory หรือไม่
         Dormitory dormitory = dormitoryRepository.findByDormId(formCreateDTO.getDormId())
@@ -197,6 +197,28 @@ public class FormService {
         // Define staffId ที่ดึงจาก dormitory
         exitsForm.setStaffId(staffId);  // บันทึก staffId ลงใน Form
         Form updatedForm = formRepository.save(exitsForm);
+//        return modelMapper.map(updatedForm, FormCreateDTO.class);
+        // ส่งอีเมลที่อัพเดทไปยัง staff หลังจากการอัพเดท Form
+        String subject = "Updated Form Submission for Dormitory Reservation";
+        String body = "Dear " + staff.getStaffName() + ",\n\n" +
+                "A updated form has been submitted for dormitory reservation. " +
+                "Here are the details:\n\n" +
+                "Form ID: " + updatedForm.getFormId() + "\n" +
+                "Name: " + updatedForm.getName() + "\n" +
+                "Phone: " + updatedForm.getPhone() + "\n" +
+                "Email: " + updatedForm.getEmail() + "\n" +
+                "Date In: " + updatedForm.getDate_in() + "\n" +
+                "Date Out: " + updatedForm.getDate_out() + "\n\n" ;
+        // เช็คว่า description มีค่าหรือไม่ ถ้ามีให้เพิ่มลงไปในอีเมล
+        if (updatedForm.getDescription() != null && !updatedForm.getDescription().isEmpty()) {
+            body += "Description: " + updatedForm.getDescription() + "\n\n";
+        }
+        body += "Kind regards,\nYour Dormitory Reservation System";
+
+        // ส่งอีเมล
+        emailService.sendEmail(staff.getStaffEmail(), subject, body);
+
+        // แปลง Form ที่บันทึกแล้วเป็น FormCreateDTO เพื่อส่งกลับ
         return modelMapper.map(updatedForm, FormCreateDTO.class);
     }
 
